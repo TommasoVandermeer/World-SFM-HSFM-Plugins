@@ -1,0 +1,9 @@
+Vector2 global_force
+Vector2 desired_force
+Vector2 obstacle_force
+Vector2 social_force
+Vector2 group_force
+float64 torque_force
+Vector2 linear_velocity
+float64 angular_velocity
+Pose2 pose

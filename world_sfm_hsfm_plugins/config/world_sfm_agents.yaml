@@ -1,0 +1,71 @@
+agent_params_loader:
+  ros__parameters:
+    # NOTE: All numerical parameters (except mass) 
+    # must include at least one decimal or the code will not run
+    # GLOBAL PARAMETERS
+    # ************** PARAMS TO ADD ***************
+    #visualize_forces: True #If true, the direction of each force vector is shown in colored lines for each actor
+    # ********************************************
+    sampling_time: 0.001
+    runge_kutta_45: True
+    ground_height: -0.1 # This is important to adjust the height of entities based on the ground level
+    robot_control: True  # If false, just the pedestrian motion is simulated
+    robot_name: "pioneer3at"
+    laser_sensor_name: "laser" # Used to get the laser sensor and access its readings
+    robot_initial_orientation: -90.0
+    robot_waypoints: [-0.2,-7.5,-0.2,7.5]
+    robot_initial_position: [-0.2,10.0]
+    robot_radius: 0.35
+    robot_mass: 35
+    robot_goal_weight: 2.0
+    robot_obstacle_weight: 10.0
+    robot_social_weight: 15.0
+    robot_velocity: 1.0
+    robot_ignore_obstacles: ["actor1_collision_model","actor2_collision_model"]
+    # NOTE: agent names must be the same listed in the world file
+    agents: ["agent1","agent2"] # Strings must be in "", not ''
+    attach_cylinder_to_humans: True # If true, a cylinder of the chosen radius is attached to the actors for laser detection
+    consider_robot: True # If false, the pedestrian ignore the robot
+    # ACTORS PARAMETERS
+    agent1:
+      # Waypoints are defined with two coordinates (x,y) and concatenated in a single array
+      # Waypoints are the only REQUIRED parameter to specify for each agent
+      waypoints: [-2.0,1.25,-2.0,-1.25,-0.2,-5.0,-0.2,5.0] # Make sure the array elements are a multiple of two
+      initial_orientation: -90.0 # An double expressed in degrees
+      initial_position: [-0.2,5.0] # (x,y)
+      radius: 0.35
+      mass: 75
+      goal_weight: 2.0
+      obstacle_weight: 10.0
+      social_weight: 15.0
+      group_gaze_weight: 0.0
+      group_coh_weight: 0.0
+      group_rep_weight: 0.0
+      velocity: 0.9
+      animation_factor: 5.1
+      animation_name: "walking"
+      people_distance: 6.0
+      ignore_obstacles: ["actor1_collision_model","actor2_collision_model"]
+      #group: ["agent2"]
+      publish_forces: True
+    agent2:
+      # Waypoints are defined with two coordinates (x,y) and concatenated in a single array
+      # Waypoints are the only REQUIRED parameter to specify for each agent
+      waypoints: [-0.2,5.0,-2.0,1.25,-2.0,-1.25,-0.2,-5.0] # Make sure the array elements are a multiple of two
+      initial_orientation: 90.0 # A double expressed in degrees
+      initial_position: [-0.2,-5.0] # (x,y)
+      radius: 0.30
+      mass: 80
+      goal_weight: 2.0
+      obstacle_weight: 10.0
+      social_weight: 15.0
+      group_gaze_weight: 0.0
+      group_coh_weight: 0.0
+      group_rep_weight: 0.0
+      velocity: 0.9
+      animation_factor: 5.1
+      animation_name: "walking"
+      people_distance: 6.0
+      ignore_obstacles: ["actor1_collision_model","actor2_collision_model"]
+      #group: ["agent1"]
+      publish_forces: True
