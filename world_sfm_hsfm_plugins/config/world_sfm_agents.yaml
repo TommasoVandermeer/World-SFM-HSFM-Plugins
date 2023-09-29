@@ -3,9 +3,6 @@ agent_params_loader:
     # NOTE: All numerical parameters (except mass) 
     # must include at least one decimal or the code will not run
     # GLOBAL PARAMETERS
-    # ************** PARAMS TO ADD ***************
-    #visualize_forces: True #If true, the direction of each force vector is shown in colored lines for each actor
-    # ********************************************
     sampling_time: 0.001
     runge_kutta_45: True
     ground_height: -0.1 # This is important to adjust the height of entities based on the ground level
@@ -21,7 +18,7 @@ agent_params_loader:
     robot_obstacle_weight: 10.0
     robot_social_weight: 15.0
     robot_velocity: 1.0
-    robot_ignore_obstacles: ["actor1_collision_model","actor2_collision_model"]
+    robot_ignore_obstacles: [""]
     # NOTE: agent names must be the same listed in the world file
     agents: ["agent1","agent2"] # Strings must be in "", not ''
     attach_cylinder_to_humans: True # If true, a cylinder of the chosen radius is attached to the actors for laser detection
@@ -47,7 +44,7 @@ agent_params_loader:
       people_distance: 6.0
       ignore_obstacles: ["actor1_collision_model","actor2_collision_model"]
       #group: ["agent2"]
-      publish_forces: True
+      publish_forces: False
     agent2:
       # Waypoints are defined with two coordinates (x,y) and concatenated in a single array
       # Waypoints are the only REQUIRED parameter to specify for each agent
@@ -68,4 +65,4 @@ agent_params_loader:
       people_distance: 6.0
       ignore_obstacles: ["actor1_collision_model","actor2_collision_model"]
       #group: ["agent1"]
-      publish_forces: True
+      publish_forces: False

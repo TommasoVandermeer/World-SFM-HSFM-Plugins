@@ -78,6 +78,7 @@ install(DIRECTORY config/
 
 install(PROGRAMS
   scripts/spawn_robot.py
+  scripts/generate_circular_op.py
   DESTINATION lib/${PROJECT_NAME}
 )
 

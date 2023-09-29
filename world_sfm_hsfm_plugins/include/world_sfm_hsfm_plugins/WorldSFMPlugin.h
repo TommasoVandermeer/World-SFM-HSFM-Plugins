@@ -101,8 +101,11 @@ private:
   /// \brief Bool to decide wether humans should consider the robot as a pedestrian or ignore it
   bool robotIsConsideredByHumans = true;
 
-  /// \brief Bool to devide wether the forces of each actor are visualized or not
-  bool visualizeForces = false; // NOT IMPLEMENTED YET
+  /// \brief Bool to check if no agents publish forces
+  bool noAgentPubForces = true;
+
+  /// \brief Bool to check if no agent visualize forces
+  bool noAgentVisualForces = true;
 
   /// **************************************************************************************************
 
@@ -289,6 +292,9 @@ private:
 
   /// \brief Saves the height of the ground in the world
   double groundHeight;
+
+  /// \brief Bool to devide wether the forces of each actor are visualized or not
+  std::vector<bool> agentVisualForces;
 };
 } // namespace gazebo
 #endif

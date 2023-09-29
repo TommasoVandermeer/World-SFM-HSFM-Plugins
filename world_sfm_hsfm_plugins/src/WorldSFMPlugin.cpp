@@ -24,7 +24,7 @@ WorldSFMPlugin::WorldSFMPlugin() {}
 void WorldSFMPlugin::Load(gazebo::physics::WorldPtr _world, sdf::ElementPtr _sdf) {
   this->sdf = _sdf;
   this->world = _world;
-
+  
   // Get the actors parameters
   this->actorParamsNode = std::make_shared<rclcpp::Node>(this->nodeName);
   this->actorParamsClient = this->actorParamsNode->create_client<rcl_interfaces::srv::GetParameters>("/agent_params_loader/get_parameters");
@@ -132,15 +132,7 @@ void WorldSFMPlugin::Reset() {
   this->lastUpdate = 0;
 
   for (unsigned int i = 0; i < this->actors.size(); ++i) {
-    // Initialize Goals 
-    for (unsigned int j = 0; j < this->agentGoals[i].size(); ++j) {
-      sfm::Goal sfmGoal;
-      sfmGoal.center.set(std::get<0>(this->agentGoals[i][j]),std::get<1>(this->agentGoals[i][j]));
-      sfmGoal.radius = 0.3;
-      this->sfmActors[i].cyclicGoals = true;
-      this->sfmActors[i].goals.push_back(sfmGoal);
-    }
-    // Initialize Trajectory of each agent
+    // Intialize skeleton animation
     auto skelAnims = this->actors[i]->SkeletonAnimations();
     if (skelAnims.find(this->agentAnimName[i]) == skelAnims.end()) {
       gzerr << "Skeleton animation " << this->agentAnimName[i] << " not found.\n";
@@ -151,6 +143,10 @@ void WorldSFMPlugin::Reset() {
       trajectory->duration = 1.0;
       this->trajectoryInfo.push_back(trajectory);
       this->actors[i]->SetCustomTrajectory(this->trajectoryInfo[i]);
+    }
+    // Check if no agent publish forces or visualize forces
+    if (this->agentPubForces[i]) {
+      this->noAgentPubForces = false;
     }
     // Create publisher for each agent
     rclcpp::Publisher<world_sfm_hsfm_plugins::msg::Forces>::SharedPtr pub = this->actorForcesNode->create_publisher<world_sfm_hsfm_plugins::msg::Forces>(this->agentTopicName[i], 10);
@@ -314,7 +310,7 @@ void WorldSFMPlugin::OnUpdate(const common::UpdateInfo &_info) {
     }
 
     // Publish forces
-    PublishForces();
+    if (!this->noAgentPubForces) PublishForces();
 
     for (unsigned int i = 0; i < this->sfmEntities.size(); ++i) {
       ignition::math::Pose3d pose = this->entitiesModel[i]->WorldPose();
@@ -370,7 +366,7 @@ void WorldSFMPlugin::OnUpdateOnlyActors(const common::UpdateInfo &_info) {
     }
 
     // Publish forces
-    PublishForces();
+    if (!this->noAgentPubForces) PublishForces();
 
     for (unsigned int i = 0; i < this->sfmActors.size(); ++i) {
       ignition::math::Pose3d actorPose = this->actors[i]->WorldPose();
@@ -751,6 +747,13 @@ void WorldSFMPlugin::InitializeActors() {
       agent.groupId = agent.id;
     } else {
       agent.groupId = -1;
+    }
+    for (unsigned int j = 0; j < this->agentGoals[i].size(); ++j) {
+      sfm::Goal sfmGoal;
+      sfmGoal.center.set(std::get<0>(this->agentGoals[i][j]),std::get<1>(this->agentGoals[i][j]));
+      sfmGoal.radius = 0.3;
+      agent.cyclicGoals = true;
+      agent.goals.push_back(sfmGoal);
     }
     this->sfmActors.push_back(agent);
   }

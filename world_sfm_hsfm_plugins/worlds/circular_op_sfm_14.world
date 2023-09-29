@@ -59,6 +59,10 @@
               <scale>1 1 1</scale>
             </mesh>
           </geometry>
+          <!-- <material>
+            <diffuse>1 0 0 1</diffuse>
+            <ambient>1 0 0 1</ambient>
+          </material> -->
         </visual>
       </link>
     </model>
@@ -144,6 +148,97 @@
 
     <actor name="agent7">
       <pose>0 6 1.01 0 0 0</pose>
+      <skin>
+        <filename>stand.dae</filename>
+        <scale>1.0</scale>
+      </skin>
+      <animation name="walking">
+        <filename>walk.dae</filename>
+        <scale>1.000000</scale>
+        <interpolate_x>true</interpolate_x>
+      </animation>
+    </actor>
+
+    <actor name="agent8">
+      <pose>0 7 1.01 0 0 0</pose>
+      <skin>
+        <filename>stand.dae</filename>
+        <scale>1.0</scale>
+      </skin>
+      <animation name="walking">
+        <filename>walk.dae</filename>
+        <scale>1.000000</scale>
+        <interpolate_x>true</interpolate_x>
+      </animation>
+    </actor>
+
+    <actor name="agent9">
+      <pose>0 8 1.01 0 0 0</pose>
+      <skin>
+        <filename>stand.dae</filename>
+        <scale>1.0</scale>
+      </skin>
+      <animation name="walking">
+        <filename>walk.dae</filename>
+        <scale>1.000000</scale>
+        <interpolate_x>true</interpolate_x>
+      </animation>
+    </actor>
+
+    <actor name="agent10">
+      <pose>0 9 1.01 0 0 0</pose>
+      <skin>
+        <filename>stand.dae</filename>
+        <scale>1.0</scale>
+      </skin>
+      <animation name="walking">
+        <filename>walk.dae</filename>
+        <scale>1.000000</scale>
+        <interpolate_x>true</interpolate_x>
+      </animation>
+    </actor>
+
+    <actor name="agent11">
+      <pose>0 10 1.01 0 0 0</pose>
+      <skin>
+        <filename>stand.dae</filename>
+        <scale>1.0</scale>
+      </skin>
+      <animation name="walking">
+        <filename>walk.dae</filename>
+        <scale>1.000000</scale>
+        <interpolate_x>true</interpolate_x>
+      </animation>
+    </actor>
+
+    <actor name="agent12">
+      <pose>0 11 1.01 0 0 0</pose>
+      <skin>
+        <filename>stand.dae</filename>
+        <scale>1.0</scale>
+      </skin>
+      <animation name="walking">
+        <filename>walk.dae</filename>
+        <scale>1.000000</scale>
+        <interpolate_x>true</interpolate_x>
+      </animation>
+    </actor>
+
+    <actor name="agent13">
+      <pose>0 12 1.01 0 0 0</pose>
+      <skin>
+        <filename>stand.dae</filename>
+        <scale>1.0</scale>
+      </skin>
+      <animation name="walking">
+        <filename>walk.dae</filename>
+        <scale>1.000000</scale>
+        <interpolate_x>true</interpolate_x>
+      </animation>
+    </actor>
+
+    <actor name="agent14">
+      <pose>0 13 1.01 0 0 0</pose>
       <skin>
         <filename>stand.dae</filename>
         <scale>1.0</scale>
