@@ -1,6 +1,6 @@
 /***********************************************************************/
 /**                                                                    */
-/** WorldSFMPlugin.cpp                                                 */
+/** WorldHSFMPlugin.cpp                                                 */
 /**                                                                    */
 /** Author: Tommaso Van Der Meer (tommaso.vander@unisi.it)             */
 /**                                                                    */
@@ -10,18 +10,18 @@
 #include <stdio.h>
 #include <string>
 
-#include <world_sfm_hsfm_plugins/WorldSFMPlugin.h>
+#include <world_sfm_hsfm_plugins/WorldHSFMPlugin.h>
 
 using namespace gazebo;
-GZ_REGISTER_WORLD_PLUGIN(WorldSFMPlugin)
+GZ_REGISTER_WORLD_PLUGIN(WorldHSFMPlugin)
 
 #define WALKING_ANIMATION "walking"
 
 /////////////////////////////////////////////////
-WorldSFMPlugin::WorldSFMPlugin() {}
+WorldHSFMPlugin::WorldHSFMPlugin() {}
 
 /////////////////////////////////////////////////
-void WorldSFMPlugin::Load(gazebo::physics::WorldPtr _world, sdf::ElementPtr _sdf) {
+void WorldHSFMPlugin::Load(gazebo::physics::WorldPtr _world, sdf::ElementPtr _sdf) {
   this->sdf = _sdf;
   this->world = _world;
   
@@ -39,14 +39,14 @@ void WorldSFMPlugin::Load(gazebo::physics::WorldPtr _world, sdf::ElementPtr _sdf
   this->actorForcesNode = std::make_shared<rclcpp::Node>("publish_Forces_Node");
 
   this->connections.push_back(event::Events::ConnectWorldUpdateBegin(
-    std::bind(&WorldSFMPlugin::Loading, this, std::placeholders::_1)));
+    std::bind(&WorldHSFMPlugin::Loading, this, std::placeholders::_1)));
 
   // Reset settings (goals and animations)
   this->Reset();
 }
 
 /////////////////////////////////////////////////
-void WorldSFMPlugin::Loading(const common::UpdateInfo &_info) {
+void WorldHSFMPlugin::Loading(const common::UpdateInfo &_info) {
 
   /// Both collision models to actors and robot control
   if ((this->attachCollisionToActors) && (this->controlRobot)) {
@@ -77,7 +77,7 @@ void WorldSFMPlugin::Loading(const common::UpdateInfo &_info) {
       }
       this->connections.pop_back();
       this->connections.push_back(event::Events::ConnectWorldUpdateBegin(
-        std::bind(&WorldSFMPlugin::OnUpdate, this, std::placeholders::_1)));
+        std::bind(&WorldHSFMPlugin::OnUpdate, this, std::placeholders::_1)));
     }
   }
 
@@ -93,7 +93,7 @@ void WorldSFMPlugin::Loading(const common::UpdateInfo &_info) {
     } else {
       this->connections.pop_back();
       this->connections.push_back(event::Events::ConnectWorldUpdateBegin(
-        std::bind(&WorldSFMPlugin::OnUpdate, this, std::placeholders::_1)));
+        std::bind(&WorldHSFMPlugin::OnUpdate, this, std::placeholders::_1)));
     }
   }
 
@@ -119,7 +119,7 @@ void WorldSFMPlugin::Loading(const common::UpdateInfo &_info) {
       }
       this->connections.pop_back();
       this->connections.push_back(event::Events::ConnectWorldUpdateBegin(
-        std::bind(&WorldSFMPlugin::OnUpdateOnlyActors, this, std::placeholders::_1)));
+        std::bind(&WorldHSFMPlugin::OnUpdateOnlyActors, this, std::placeholders::_1)));
     }
   }
   
@@ -127,12 +127,12 @@ void WorldSFMPlugin::Loading(const common::UpdateInfo &_info) {
   if ((!this->attachCollisionToActors) && (!this->controlRobot)) {
     this->connections.pop_back();
     this->connections.push_back(event::Events::ConnectWorldUpdateBegin(
-      std::bind(&WorldSFMPlugin::OnUpdateOnlyActors, this, std::placeholders::_1)));
+      std::bind(&WorldHSFMPlugin::OnUpdateOnlyActors, this, std::placeholders::_1)));
   }
 }
 
 /////////////////////////////////////////////////
-void WorldSFMPlugin::Reset() {
+void WorldHSFMPlugin::Reset() {
   this->lastUpdate = 0;
 
   for (unsigned int i = 0; i < this->actors.size(); ++i) {
@@ -148,7 +148,7 @@ void WorldSFMPlugin::Reset() {
       this->trajectoryInfo.push_back(trajectory);
       this->actors[i]->SetCustomTrajectory(this->trajectoryInfo[i]);
     }
-    // Check if no agent publish forces 
+    // Check if no agent publish forces or visualize forces
     if (this->agentPubForces[i]) {
       this->noAgentPubForces = false;
     }
@@ -159,7 +159,7 @@ void WorldSFMPlugin::Reset() {
 }
 
 /////////////////////////////////////////////////
-void WorldSFMPlugin::HandleObstacles() {
+void WorldHSFMPlugin::HandleObstacles() {
   for (unsigned int k = 0; k < this->sfmEntities.size(); ++k) {
     if (this->entitiesModel[k]->GetId() == this->robotModel->GetId()) {
       // If the robot is considered take the obs found by laser
@@ -229,7 +229,7 @@ void WorldSFMPlugin::HandleObstacles() {
 }
 
 /////////////////////////////////////////////////
-void WorldSFMPlugin::HandleObstaclesOnlyActors() {
+void WorldHSFMPlugin::HandleObstaclesOnlyActors() {
   for (unsigned int k = 0; k < this->sfmActors.size(); ++k) {
     double minDist;
     ignition::math::Vector2d closest_obs;
@@ -279,7 +279,7 @@ void WorldSFMPlugin::HandleObstaclesOnlyActors() {
 }
 
 /////////////////////////////////////////////////
-void WorldSFMPlugin::OnUpdate(const common::UpdateInfo &_info) {
+void WorldHSFMPlugin::OnUpdate(const common::UpdateInfo &_info) {
   double dt = (_info.simTime - this->lastUpdate).Double();
   // If sampling time is passed from last update
   if (dt >= this->samplingTime){
@@ -287,25 +287,25 @@ void WorldSFMPlugin::OnUpdate(const common::UpdateInfo &_info) {
     HandleObstacles();
     
     if (this->robotIsConsideredByHumans){
-      this->sfmEntities = sfm::SFM.computeForces(this->sfmEntities);
+      this->sfmEntities = hsfm::HSFM.computeForces(this->sfmEntities);
       // We erase the social forces for the robot, in this way, it only relies on laser data
       this->sfmEntities.back().forces.globalForce -= this->sfmEntities.back().forces.socialForce;
       // Update model
       if (!this->rungeKutta45) {
-        this->sfmEntities = sfm::SFM.updatePosition(this->sfmEntities, dt);
+        this->sfmEntities = hsfm::HSFM.updatePosition(this->sfmEntities, dt);
       } else {
-        this->sfmEntities = sfm::SFM.updatePositionRKF45(this->sfmEntities, _info.simTime.Double(), dt);
+        this->sfmEntities = hsfm::HSFM.updatePositionRKF45(this->sfmEntities, _info.simTime.Double(), dt);
       }
     } else {
-      sfm::SFM.computeForces(this->sfmRobot, this->sfmActors);
+      hsfm::HSFM.computeForces(this->sfmRobot, this->sfmActors);
       // We erase the social forces for the robot, in this way, it only relies on laser data
       this->sfmRobot.forces.globalForce -= this->sfmRobot.forces.socialForce;
-      this->sfmActors = sfm::SFM.computeForces(this->sfmActors);
+      this->sfmActors = hsfm::HSFM.computeForces(this->sfmActors);
       if (!this->rungeKutta45) {
-        this->sfmActors = sfm::SFM.updatePosition(this->sfmActors, dt);
+        this->sfmActors = hsfm::HSFM.updatePosition(this->sfmActors, dt);
         sfm::SFM.updatePosition(this->sfmRobot, dt);
       } else {
-        this->sfmActors = sfm::SFM.updatePositionRKF45(this->sfmActors, _info.simTime.Double(), dt);
+        this->sfmActors = hsfm::HSFM.updatePositionRKF45(this->sfmActors, _info.simTime.Double(), dt);
         sfm::SFM.updatePositionRKF45(this->sfmRobot, _info.simTime.Double(), dt);
       }
       // Save new values
@@ -353,20 +353,20 @@ void WorldSFMPlugin::OnUpdate(const common::UpdateInfo &_info) {
 }
 
 /////////////////////////////////////////////////
-void WorldSFMPlugin::OnUpdateOnlyActors(const common::UpdateInfo &_info) {
+void WorldHSFMPlugin::OnUpdateOnlyActors(const common::UpdateInfo &_info) {
   double dt = (_info.simTime - this->lastUpdate).Double();
   // If sampling time is passed from last update
   if (dt >= this->samplingTime){
     // Update closest obstacle
     HandleObstaclesOnlyActors();
 
-    this->sfmActors = sfm::SFM.computeForces(this->sfmActors);
+    this->sfmActors = hsfm::HSFM.computeForces(this->sfmActors);
 
     // Update model
     if (!this->rungeKutta45) {
-      this->sfmActors = sfm::SFM.updatePosition(this->sfmActors, dt);
+      this->sfmActors = hsfm::HSFM.updatePosition(this->sfmActors, dt);
     } else {
-      this->sfmActors = sfm::SFM.updatePositionRKF45(this->sfmActors, _info.simTime.Double(), dt);
+      this->sfmActors = hsfm::HSFM.updatePositionRKF45(this->sfmActors, _info.simTime.Double(), dt);
     }
 
     // Publish forces
@@ -397,13 +397,15 @@ void WorldSFMPlugin::OnUpdateOnlyActors(const common::UpdateInfo &_info) {
 }
 
 ////////////////////////////////////////////////
-void WorldSFMPlugin::LoadAgentsFromYaml() {
+void WorldHSFMPlugin::LoadAgentsFromYaml() {
   // FIRST REQUEST to get the agents names and other global parameters
   auto request = std::make_shared<rcl_interfaces::srv::GetParameters::Request>();
   request->names = {"agents","sampling_time","runge_kutta_45","robot_name","robot_initial_orientation", \
-  "robot_waypoints","robot_initial_position","robot_radius","robot_mass","robot_goal_weight", \
-  "robot_obstacle_weight", "robot_social_weight", "robot_velocity", "robot_ignore_obstacles", \
-  "laser_sensor_name", "attach_cylinder_to_humans","ground_height","robot_control","consider_robot"};
+  "robot_waypoints","robot_initial_position","robot_radius","robot_mass","robot_relaxation_time", \
+  "robot_k_orthogonal", "robot_k_damping", "robot_velocity", "robot_ignore_obstacles", \
+  "laser_sensor_name", "attach_cylinder_to_humans","ground_height","robot_control","consider_robot", \
+  "robot_k_lambda", "robot_alpha", "robot_Ai", "robot_Aw", "robot_Bi", "robot_Bw", "robot_k1", \
+  "robot_k2"};
   this->actorParamsClient->wait_for_service();
   auto future = this->actorParamsClient->async_send_request(request);
 
@@ -477,26 +479,26 @@ void WorldSFMPlugin::LoadAgentsFromYaml() {
       } else {
         this->robotMass = results[8].integer_value;
       }
-      // Robot goal weight
+      // Robot relaxation time
       if (results[9].type == rclcpp::PARAMETER_NOT_SET) {
-        this->robotGoalWeight = 2.0;
-        std::cout<<"Goal weight for robot not set, setting it to the default value: 2.0"<<std::endl;
+        this->robotRelaxTime = 0.5;
+        std::cout<<"Relaxation time for robot not set, setting it to the default value: 0.5"<<std::endl;
       } else {
-        this->robotGoalWeight = results[9].double_value;
+        this->robotRelaxTime = results[9].double_value;
       }
-      // Robot obstacle weight
+      // Robot k orthogonal
       if (results[10].type == rclcpp::PARAMETER_NOT_SET) {
-        this->robotObstacleWeight = 10.0;
-        std::cout<<"Obstacle weight for robot not set, setting it to the default value: 10.0"<<std::endl;
+        this->robotKOrthogonal = 1.0;
+        std::cout<<"K orthogonal for robot not set, setting it to the default value: 1.0"<<std::endl;
       } else {
-        this->robotObstacleWeight = results[10].double_value;
+        this->robotKOrthogonal = results[10].double_value;
       }
-      // Robot social weight
+      // Robot k damping
       if (results[11].type == rclcpp::PARAMETER_NOT_SET) {
-        this->robotSocialWeight = 15.0;
-        std::cout<<"Social weight for robot not set, setting it to the default value: 15.0"<<std::endl;
+        this->robotKDamping = 500.0;
+        std::cout<<"K damping for robot not set, setting it to the default value: 500.0"<<std::endl;
       } else {
-        this->robotSocialWeight = results[11].double_value;
+        this->robotKDamping = results[11].double_value;
       }
       // Robot velocity 
       if (results[12].type == rclcpp::PARAMETER_NOT_SET) {
@@ -504,6 +506,62 @@ void WorldSFMPlugin::LoadAgentsFromYaml() {
         std::cout<<"Velocity for robot not set, setting it to the default value: 1.0"<<std::endl;
       } else {
         this->robotVelocity = results[12].double_value;
+      }
+      // Robot k lambda
+      if (results[19].type == rclcpp::PARAMETER_NOT_SET) {
+        this->robotKLambda = 0.3;
+        std::cout<<"K damping for robot not set, setting it to the default value: "<<this->robotKLambda<<std::endl;
+      } else {
+        this->robotKLambda = results[19].double_value;
+      }
+      // Robot alpha
+      if (results[20].type == rclcpp::PARAMETER_NOT_SET) {
+        this->robotAlpha = 3.0;
+        std::cout<<"Alpha for robot not set, setting it to the default value: "<<this->robotAlpha<<std::endl;
+      } else {
+        this->robotAlpha = results[20].double_value;
+      }
+      // Robot Ai
+      if (results[21].type == rclcpp::PARAMETER_NOT_SET) {
+        this->robotAi = 2000.0;
+        std::cout<<"Ai for robot not set, setting it to the default value: "<<this->robotAi<<std::endl;
+      } else {
+        this->robotAi = results[21].double_value;
+      }
+      // Robot Aw
+      if (results[22].type == rclcpp::PARAMETER_NOT_SET) {
+        this->robotAw = 2000.0;
+        std::cout<<"Aw for robot not set, setting it to the default value: "<<this->robotAw<<std::endl;
+      } else {
+        this->robotAw = results[22].double_value;
+      }
+      // Robot Bi
+      if (results[23].type == rclcpp::PARAMETER_NOT_SET) {
+        this->robotBi = 0.08;
+        std::cout<<"Bi for robot not set, setting it to the default value: "<<this->robotBi<<std::endl;
+      } else {
+        this->robotBi = results[23].double_value;
+      }
+      // Robot Bw
+      if (results[24].type == rclcpp::PARAMETER_NOT_SET) {
+        this->robotBw = 0.08;
+        std::cout<<"Bw for robot not set, setting it to the default value: "<<this->robotBw<<std::endl;
+      } else {
+        this->robotBw = results[24].double_value;
+      }
+      // Robot k1
+      if (results[25].type == rclcpp::PARAMETER_NOT_SET) {
+        this->robotK1 = 120000.0;
+        std::cout<<"K1 for robot not set, setting it to the default value: "<<this->robotK1<<std::endl;
+      } else {
+        this->robotK1 = results[25].double_value;
+      }
+      // Robot k2
+      if (results[26].type == rclcpp::PARAMETER_NOT_SET) {
+        this->robotK2 = 240000.0;
+        std::cout<<"K2 for robot not set, setting it to the default value: "<<this->robotK2<<std::endl;
+      } else {
+        this->robotK2 = results[26].double_value;
       }
       // Robot ingore obstacles
       for (unsigned int j = 0; j < this->agentNames.size(); ++j){
@@ -555,12 +613,14 @@ void WorldSFMPlugin::LoadAgentsFromYaml() {
   // SECOND ROUND OF REQUESTS to get the parameters of each agent
   for(unsigned int i = 0; i < this->agentNames.size(); ++i){
     request->names.clear();
-    request->names = {this->agentNames[i] + ".mass", this->agentNames[i] + ".radius", this->agentNames[i] + ".goal_weight", \
-    this->agentNames[i] + ".obstacle_weight", this->agentNames[i] + ".social_weight", this->agentNames[i] + ".group_gaze_weight", \
-    this->agentNames[i] + ".group_coh_weight", this->agentNames[i] + ".group_rep_weight", this->agentNames[i] + ".velocity", \
-    this->agentNames[i] + ".animation_factor", this->agentNames[i] + ".animation_name", this->agentNames[i] + ".people_distance", \
+    request->names = {this->agentNames[i] + ".mass", this->agentNames[i] + ".radius", this->agentNames[i] + ".relaxation_time", \
+    this->agentNames[i] + ".k_orthogonal", this->agentNames[i] + ".k_damping", this->agentNames[i] + ".k_lambda", \
+    this->agentNames[i] + ".alpha", this->agentNames[i] + ".group_distance_forward", this->agentNames[i] + ".velocity", \
+    this->agentNames[i] + ".animation_factor", this->agentNames[i] + ".animation_name", this->agentNames[i] + ".group_distance_orthogonal", \
     this->agentNames[i] + ".ignore_obstacles", this->agentNames[i] + ".waypoints", this->agentNames[i] + ".publish_forces", \
-    this->agentNames[i] + ".group", this->agentNames[i] + ".initial_orientation", this->agentNames[i] + ".initial_position"};
+    this->agentNames[i] + ".group", this->agentNames[i] + ".initial_orientation", this->agentNames[i] + ".initial_position", \
+    this->agentNames[i] + ".k1g", this->agentNames[i] + ".k2g", this->agentNames[i] + ".Ai", this->agentNames[i] + ".Aw", \
+    this->agentNames[i] + ".Bi", this->agentNames[i] + ".Bw", this->agentNames[i] + ".k1", this->agentNames[i] + ".k2"};
 
     auto future = this->actorParamsClient->async_send_request(request);
 
@@ -580,47 +640,47 @@ void WorldSFMPlugin::LoadAgentsFromYaml() {
       } else {
         this->agentRadius.push_back(results[1].double_value);
       }
-      // Goal Weight
+      // Relaxation time
       if (results[2].type == rclcpp::PARAMETER_NOT_SET) {
-        this->agentGoalWeight.push_back(2.0);
-        std::cout<<"Goal weight for " + this->agentNames[i] + " not set, setting it to the default value: 2.0"<<std::endl;
+        this->agentRelaxTime.push_back(0.5);
+        std::cout<<"Relaxation time for " + this->agentNames[i] + " not set, setting it to the default value: 0.5"<<std::endl;
       } else {
-        this->agentGoalWeight.push_back(results[2].double_value);
+        this->agentRelaxTime.push_back(results[2].double_value);
       }
-      // Obstacle Weight
+      // K orthogonal
       if (results[3].type == rclcpp::PARAMETER_NOT_SET) {
-        this->agentObstacleWeight.push_back(10.0);
-        std::cout<<"Obstacle weight for " + this->agentNames[i] + " not set, setting it to the default value: 10.0"<<std::endl;
+        this->agentKOrthogonal.push_back(1.0);
+        std::cout<<"K orthogonal for " + this->agentNames[i] + " not set, setting it to the default value: 1.0"<<std::endl;
       } else {
-        this->agentObstacleWeight.push_back(results[3].double_value);
+        this->agentKOrthogonal.push_back(results[3].double_value);
       }
-      // Social Weight
+      // K damping
       if (results[4].type == rclcpp::PARAMETER_NOT_SET) {
-        this->agentSocialWeight.push_back(15.0);
-        std::cout<<"Social weight for " + this->agentNames[i] + " not set, setting it to the default value: 15.0"<<std::endl;
+        this->agentKDamping.push_back(500.0);
+        std::cout<<"K damping for " + this->agentNames[i] + " not set, setting it to the default value: 500.0"<<std::endl;
       } else {
-        this->agentSocialWeight.push_back(results[4].double_value);
+        this->agentKDamping.push_back(results[4].double_value);
       }
-      // Group Gaze Weight
+      // K lambda
       if (results[5].type == rclcpp::PARAMETER_NOT_SET){
-        this->agentGroupGaze.push_back(0.0);
-        std::cout<<"Group gaze weight for " + this->agentNames[i] + " not set, setting it to the default value: 0.0"<<std::endl;
+        this->agentKLambda.push_back(0.3);
+        std::cout<<"K lambda for " + this->agentNames[i] + " not set, setting it to the default value: 0.3"<<std::endl;
       } else {
-        this->agentGroupGaze.push_back(results[5].double_value);
+        this->agentKLambda.push_back(results[5].double_value);
       }
-      // Group Cohesion Weight
+      // Alpha
       if (results[6].type == rclcpp::PARAMETER_NOT_SET) {
-        this->agentGroupCoh.push_back(0.0);
-        std::cout<<"Group cohesion weight for " + this->agentNames[i] + " not set, setting it to the default value: 0.0"<<std::endl;
+        this->agentAlpha.push_back(3.0);
+        std::cout<<"Alpha for " + this->agentNames[i] + " not set, setting it to the default value: 3.0"<<std::endl;
       } else {
-        this->agentGroupCoh.push_back(results[6].double_value);
+        this->agentAlpha.push_back(results[6].double_value);
       }
-      // Group Repulsion Weight
+      // Group Distance Forward
       if (results[7].type == rclcpp::PARAMETER_NOT_SET) {
-        this->agentGroupRep.push_back(0.0);
-        std::cout<<"Group repulsion weight for " + this->agentNames[i] + " not set, setting it to the default value: 0.0"<<std::endl;
+        this->agentGroupDistForw.push_back(2.0);
+        std::cout<<"Group distance forward for " + this->agentNames[i] + " not set, setting it to the default value: 2.0"<<std::endl;
       } else {
-        this->agentGroupRep.push_back(results[7].double_value);
+        this->agentGroupDistForw.push_back(results[7].double_value);
       }
       // Desired Velocity
       if (results[8].type == rclcpp::PARAMETER_NOT_SET) {
@@ -643,12 +703,12 @@ void WorldSFMPlugin::LoadAgentsFromYaml() {
       } else {
         this->agentAnimName.push_back(results[10].string_value);
       }
-      // People Distance
+      // Group Distance Orthogonal
       if (results[11].type == rclcpp::PARAMETER_NOT_SET) {
-        this->agentPeopleDist.push_back(6.0);
-        std::cout<<"People distance for " + this->agentNames[i] + " not set, setting it to the default value: 6.0"<<std::endl;
+        this->agentGroupDistOrth.push_back(1.0);
+        std::cout<<"Group distance orthogonal for " + this->agentNames[i] + " not set, setting it to the default value: 1.0"<<std::endl;
       } else {
-        this->agentPeopleDist.push_back(results[11].double_value);
+        this->agentGroupDistOrth.push_back(results[11].double_value);
       }
       // Publish Forces Boolean
       if (results[14].type == rclcpp::PARAMETER_NOT_SET) {
@@ -697,6 +757,62 @@ void WorldSFMPlugin::LoadAgentsFromYaml() {
         std::tuple<double,double> pos(results[17].double_array_value[0],results[17].double_array_value[1]);
         this->agentInitPos.push_back(pos);
       }
+      // K1g
+      if (results[18].type == rclcpp::PARAMETER_NOT_SET) {
+        this->agentK1g.push_back(200.0);
+        std::cout<<"K1g for " + this->agentNames[i] + " not set, setting it to the default value: 200.0"<<std::endl;
+      } else {
+        this->agentK1g.push_back(results[18].double_value);
+      }
+      // K2g
+      if (results[19].type == rclcpp::PARAMETER_NOT_SET) {
+        this->agentK2g.push_back(200.0);
+        std::cout<<"K2g for " + this->agentNames[i] + " not set, setting it to the default value: 200.0"<<std::endl;
+      } else {
+        this->agentK2g.push_back(results[19].double_value);
+      }
+      // Ai
+      if (results[20].type == rclcpp::PARAMETER_NOT_SET) {
+        this->agentAi.push_back(2000.0);
+        std::cout<<"Ai for " + this->agentNames[i] + " not set, setting it to the default value: 2000.0"<<std::endl;
+      } else {
+        this->agentAi.push_back(results[20].double_value);
+      }
+      // Aw
+      if (results[21].type == rclcpp::PARAMETER_NOT_SET) {
+        this->agentAw.push_back(2000.0);
+        std::cout<<"Aw for " + this->agentNames[i] + " not set, setting it to the default value: 2000.0"<<std::endl;
+      } else {
+        this->agentAw.push_back(results[21].double_value);
+      }
+      // Bi
+      if (results[22].type == rclcpp::PARAMETER_NOT_SET) {
+        this->agentBi.push_back(0.08);
+        std::cout<<"Bi for " + this->agentNames[i] + " not set, setting it to the default value: 0.08"<<std::endl;
+      } else {
+        this->agentBi.push_back(results[22].double_value);
+      }
+      // Bw
+      if (results[23].type == rclcpp::PARAMETER_NOT_SET) {
+        this->agentBw.push_back(0.08);
+        std::cout<<"Bw for " + this->agentNames[i] + " not set, setting it to the default value: 0.08"<<std::endl;
+      } else {
+        this->agentBw.push_back(results[23].double_value);
+      }
+      // K1
+      if (results[24].type == rclcpp::PARAMETER_NOT_SET) {
+        this->agentK1.push_back(120000.0);
+        std::cout<<"K1 for " + this->agentNames[i] + " not set, setting it to the default value: 120000.0"<<std::endl;
+      } else {
+        this->agentK1.push_back(results[24].double_value);
+      }
+      // K2
+      if (results[25].type == rclcpp::PARAMETER_NOT_SET) {
+        this->agentK2.push_back(240000.0);
+        std::cout<<"K2 for " + this->agentNames[i] + " not set, setting it to the default value: 240000.0"<<std::endl;
+      } else {
+        this->agentK2.push_back(results[25].double_value);
+      }
       // Agents in group
       if (results[12].type == rclcpp::PARAMETER_NOT_SET) {
         std::cout<<"No group for " + this->agentNames[i]<<std::endl;
@@ -717,7 +833,7 @@ void WorldSFMPlugin::LoadAgentsFromYaml() {
 }
 
 ////////////////////////////////////////////////
-void WorldSFMPlugin::InitializeActors() {
+void WorldHSFMPlugin::InitializeActors() {
   for (unsigned int i = 0; i < this->actors.size(); ++i) {
     ignition::math::Pose3d actorPose = this->actors[i]->WorldPose();
 
@@ -732,7 +848,7 @@ void WorldSFMPlugin::InitializeActors() {
     ignition::math::Pose3d pose = this->actors[i]->WorldPose();
     ignition::math::Vector3d linvel = this->actors[i]->WorldLinearVel();
     ignition::math::Vector3d angvel = this->actors[i]->WorldAngularVel();
-    sfm::Agent agent;
+    hsfm::Agent agent;
     agent.id = this->actors[i]->GetId();
     agent.position.set(pose.Pos().X(),pose.Pos().Y());
     agent.yaw = pose.Rot().Euler().Z();
@@ -753,7 +869,7 @@ void WorldSFMPlugin::InitializeActors() {
       agent.groupId = -1;
     }
     for (unsigned int j = 0; j < this->agentGoals[i].size(); ++j) {
-      sfm::Goal sfmGoal;
+      hsfm::Goal sfmGoal;
       sfmGoal.center.set(std::get<0>(this->agentGoals[i][j]),std::get<1>(this->agentGoals[i][j]));
       sfmGoal.radius = 0.3;
       agent.cyclicGoals = true;
@@ -766,7 +882,7 @@ void WorldSFMPlugin::InitializeActors() {
 }
 
 ////////////////////////////////////////////////
-void WorldSFMPlugin::CreateModelForActors() {
+void WorldHSFMPlugin::CreateModelForActors() {
   for (unsigned int i = 0; i < this->agentModel.size(); ++i) {
 
     std::string modelName = this->agentNames[i] + "_collision_model";
@@ -797,7 +913,7 @@ void WorldSFMPlugin::CreateModelForActors() {
 }
 
 ////////////////////////////////////////////////
-void WorldSFMPlugin::InitializeRobot() {
+void WorldHSFMPlugin::InitializeRobot() {
   this->robotModel = this->world->ModelByName(this->robotName);
   this->robotModel->SetWorld(this->world);
   //std::cout<<"Robot name: "<<this->robotModel->GetName()<<std::endl;
@@ -816,7 +932,7 @@ void WorldSFMPlugin::InitializeRobot() {
   ignition::math::Pose3d pose = this->robotModel->WorldPose();
   ignition::math::Vector3d linvel = this->robotModel->WorldLinearVel();
   ignition::math::Vector3d angvel = this->robotModel->WorldAngularVel();
-  sfm::Agent agent;
+  hsfm::Agent agent;
   agent.id = this->robotModel->GetId();
   agent.position.set(pose.Pos().X(),pose.Pos().Y());
   agent.yaw = pose.Rot().Euler().Z();
@@ -834,7 +950,7 @@ void WorldSFMPlugin::InitializeRobot() {
   agent.groupId = -1;
   // Initialize Goals 
   for (unsigned int j = 0; j < this->robotGoals.size(); ++j) {
-    sfm::Goal sfmGoal;
+    hsfm::Goal sfmGoal;
     sfmGoal.center.set(std::get<0>(this->robotGoals[j]),std::get<1>(this->robotGoals[j]));
     sfmGoal.radius = 0.3;
     agent.cyclicGoals = true;
@@ -861,12 +977,12 @@ void WorldSFMPlugin::InitializeRobot() {
   this->laserSensor = sensors::SensorManager::Instance()->GetSensor(this->laserName);
   this->laserNode = boost::make_shared<gazebo::transport::Node>();
   this->laserNode->Init(this->world->Name());
-  this->laserSub = this->laserNode->Subscribe(this->laserSensor->Topic(), &WorldSFMPlugin::LaserCallback, this);
+  this->laserSub = this->laserNode->Subscribe(this->laserSensor->Topic(), &WorldHSFMPlugin::LaserCallback, this);
   //std::cout<<"Laser sensor name: "<<this->laserSensor->Name()<<", Laser sensor type: "<<this->laserSensor->Type()<<", Laser topic: "<<this->laserSensor->Topic()<<std::endl;
 }
 
 ////////////////////////////////////////////////
-void WorldSFMPlugin::LaserCallback(ConstLaserScanStampedPtr &msg) {
+void WorldHSFMPlugin::LaserCallback(ConstLaserScanStampedPtr &msg) {
   // Erase previous scans
   this->laserRanges.clear();
   this->laserObs.clear();
@@ -917,7 +1033,7 @@ void WorldSFMPlugin::LaserCallback(ConstLaserScanStampedPtr &msg) {
 }
 
 ////////////////////////////////////////////////
-void WorldSFMPlugin::PublishForces() {
+void WorldHSFMPlugin::PublishForces() {
   if (!this->controlRobot) {
     for (unsigned int i = 0; i < this->actors.size(); ++i) {
       if (this->agentPubForces[i] == true) {

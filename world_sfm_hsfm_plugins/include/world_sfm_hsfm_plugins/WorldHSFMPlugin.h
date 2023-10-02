@@ -1,12 +1,12 @@
 /***********************************************************************/
 /**                                                                    */
-/** WorldSFMPlugin.h                                                   */
+/** WorldHSFMPlugin.h                                                   */
 /**                                                                    */
 /**                                                                    */
 /***********************************************************************/
 
-#ifndef GAZEBO_PLUGINS_WORLDSFMPLUGIN_HH_
-#define GAZEBO_PLUGINS_WORLDSFMPLUGIN_HH_
+#ifndef GAZEBO_PLUGINS_WORLDHSFMPLUGIN_HH_
+#define GAZEBO_PLUGINS_WORLDHSFMPLUGIN_HH_
 
 // C++
 #include <algorithm>
@@ -29,15 +29,15 @@
 #include "world_sfm_hsfm_plugins/msg/pose2.hpp"
 
 // Social Force Model
-#include <world_sfm_hsfm_plugins/sfm.hpp>
+#include <world_sfm_hsfm_plugins/hsfm.hpp>
 
 namespace gazebo {
-class GZ_PLUGIN_VISIBLE WorldSFMPlugin : public WorldPlugin {
+class GZ_PLUGIN_VISIBLE WorldHSFMPlugin : public WorldPlugin {
   
   // METHODS -------------------------------------------------
 public:
   /// \brief Constructor
-  WorldSFMPlugin();
+  WorldHSFMPlugin();
 
   /// \brief Load the actor plugin.
   /// \param[in] _world Pointer to the parent model.
@@ -103,7 +103,7 @@ private:
 
   /// \brief Bool to check if no agents publish forces
   bool noAgentPubForces = true;
-  
+
   /// **************************************************************************************************
 
   /// \brief Pointer to the world, for convenience.
@@ -145,23 +145,75 @@ private:
   /// \brief Variable to store agent radius
   std::vector<double> agentRadius;
 
-  /// \brief Variable to store agent goal weight
-  std::vector<double> agentGoalWeight;
+  /// ADDED and REMOVED ******************************************************************************************************
 
-  /// \brief Variable to store agent obstacle weight
-  std::vector<double> agentObstacleWeight;
+  // /// \brief Variable to store agent goal weight
+  // std::vector<double> agentGoalWeight;
 
-  /// \brief Variable to store agent social weight
-  std::vector<double> agentSocialWeight;
+  // /// \brief Variable to store agent obstacle weight
+  // std::vector<double> agentObstacleWeight;
 
-  /// \brief Variable to store agent group gaze weight
-  std::vector<double> agentGroupGaze;
+  // /// \brief Variable to store agent social weight
+  // std::vector<double> agentSocialWeight;
 
-  /// \brief Variable to store agent group cohesion weight
-  std::vector<double> agentGroupCoh;
+  // /// \brief Variable to store agent group gaze weight
+  // std::vector<double> agentGroupGaze;
 
-  /// \brief Variable to store agent group repulsion weight
-  std::vector<double> agentGroupRep;
+  // /// \brief Variable to store agent group cohesion weight
+  // std::vector<double> agentGroupCoh;
+
+  // /// \brief Variable to store agent group repulsion weight
+  // std::vector<double> agentGroupRep;
+
+  // /// \brief Variable to store agent people distance
+  // std::vector<double> agentPeopleDist;
+
+  /// \brief Variable to store agent relaxation time
+  std::vector<double> agentRelaxTime;
+
+  /// \brief Variable to store agent k orthogonal
+  std::vector<double> agentKOrthogonal;
+
+  /// \brief Variable to store agent k damping
+  std::vector<double> agentKDamping;
+
+  /// \brief Variable to store agent k lambda
+  std::vector<double> agentKLambda;
+
+  /// \brief Variable to store agent alpha
+  std::vector<double> agentAlpha;
+
+  /// \brief Variable to store agent group distance forward
+  std::vector<double> agentGroupDistForw;
+
+  /// \brief Variable to store agent group distance orthogonal
+  std::vector<double> agentGroupDistOrth;
+
+  /// \brief Variable to store agent k1g
+  std::vector<double> agentK1g;
+
+  /// \brief Variable to store agent k2g
+  std::vector<double> agentK2g;
+
+  /// \brief Variable to store agent Ai
+  std::vector<double> agentAi;
+
+  /// \brief Variable to store agent Aw
+  std::vector<double> agentAw;
+
+  /// \brief Variable to store agent Bi
+  std::vector<double> agentBi;
+
+  /// \brief Variable to store agent Bw
+  std::vector<double> agentBw;
+
+  /// \brief Variable to store agent k1
+  std::vector<double> agentK1;
+
+  /// \brief Variable to store agent k2
+  std::vector<double> agentK2;
+
+  /// ******************************************************************************************************
 
   /// \brief Variable to store agent desired velocity
   std::vector<double> agentDesVelocity;
@@ -171,9 +223,6 @@ private:
 
   /// \brief Variable to store agent animation name
   std::vector<std::string> agentAnimName;
-
-  /// \brief Variable to store agent people distance
-  std::vector<double> agentPeopleDist;
 
   /// \brief Variable to store agent ignored obstacles
   std::vector<std::vector<std::string>> agentIgnoreObs;
@@ -206,7 +255,7 @@ private:
   std::vector<physics::ActorPtr> actors;
 
   /// \brief Saves actor as a SFM agent
-  std::vector<sfm::Agent> sfmActors;
+  std::vector<hsfm::Agent> sfmActors;
 
   /// \brief Vector of actors trajectories
   std::vector<physics::TrajectoryInfoPtr> trajectoryInfo;
@@ -218,16 +267,7 @@ private:
   bool robotLoaded = false;
   
   /// \brief SFM entity of the robot;
-  sfm::Agent sfmRobot;
-
-  /// \brief Robot goal weight
-  double robotGoalWeight;
-
-  /// \brief Robot obstacle weight
-  double robotObstacleWeight;
-
-  /// \brief Robot social weight
-  double robotSocialWeight;
+  hsfm::Agent sfmRobot;
 
   /// \brief Robot radius
   double robotRadius;
@@ -237,6 +277,52 @@ private:
 
   /// \brief Robot desired velocity
   double robotVelocity;
+
+  /// ADDED and REMOVED ******************************************************************************************************
+
+  // /// \brief Robot goal weight
+  // double robotGoalWeight;
+
+  // /// \brief Robot obstacle weight
+  // double robotObstacleWeight;
+
+  // /// \brief Robot social weight
+  // double robotSocialWeight;
+
+  /// \brief Robot relaxation time
+  double robotRelaxTime;
+
+  /// \brief Robot k orthogonal
+  double robotKOrthogonal;
+
+  /// \brief Robot k damping
+  double robotKDamping;
+
+  /// \brief Robot k lambda
+  double robotKLambda;
+
+  /// \brief Robot alpha
+  double robotAlpha;
+
+  /// \brief Robot Ai
+  double robotAi;
+
+  /// \brief Robot Aw
+  double robotAw;
+
+  /// \brief Robot Bi
+  double robotBi;
+
+  /// \brief Robot Bw
+  double robotBw;
+
+  /// \brief Robot k1
+  double robotK1;
+
+  /// \brief Robot k2
+  double robotK2;
+
+  /// ***************************************************************************************************************
 
   /// \brief Robot inital yaw
   double robotInitYaw;
@@ -251,7 +337,7 @@ private:
   std::vector<std::string> robotIgnoreObs;
 
   /// \brief Stores actors and robot SFM agents
-  std::vector<sfm::Agent> sfmEntities;
+  std::vector<hsfm::Agent> sfmEntities;
 
   /// \brief Store robot's and actor's models
   std::vector<physics::ModelPtr> entitiesModel;
@@ -290,5 +376,5 @@ private:
   /// \brief Saves the height of the ground in the world
   double groundHeight;
 };
-} // namespace gazebo
+}
 #endif
