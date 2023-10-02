@@ -14,9 +14,10 @@ import math
 import os 
 import sys
 
-config_dir = os.path.join(os.path.expanduser('~'),'ros2_ws/src/World-SFM-HSFM-Plugins/world_sfm_hsfm_plugins/config/')
-world_dir = os.path.join(os.path.expanduser('~'),'ros2_ws/src/World-SFM-HSFM-Plugins/world_sfm_hsfm_plugins/worlds/')
-launch_dir = os.path.join(os.path.expanduser('~'),'ros2_ws/src/World-SFM-HSFM-Plugins/world_sfm_hsfm_plugins/launch/')
+pkg_dir = os.path.join(os.path.expanduser('~'),'ros2_ws/src/World-SFM-HSFM-Plugins/world_sfm_hsfm_plugins/')
+config_dir = os.path.join(pkg_dir,'config/')
+world_dir = os.path.join(pkg_dir,'worlds/')
+launch_dir = os.path.join(pkg_dir,'launch/')
 
 def bound_angle(angle):
     if (angle > math.pi): angle -= 2 * math.pi
@@ -185,7 +186,7 @@ def write_launch(title):
            "                        output='screen')\n" +
            "    gazebo = ExecuteProcess(\n" +
            "            cmd=['gazebo', '--verbose', world, '-s', 'libgazebo_ros_init.so',\n" +
-           "            '-s', 'libgazebo_ros_factory.so'],\n" +
+           "            '-s', 'libgazebo_ros_factory.so', '--pause'],\n" +
            "            output='screen')\n" +
            "    return LaunchDescription([\n" +
            "        spawn_entity,\n" +
@@ -198,10 +199,7 @@ def write_launch(title):
 def main():
     radius = int(input("Specify the desired radius of the circular workspace (3, 4, 5, 6, or 7):\n"))
     n_actors = int(input("Specify the number of actors to insert in the experiment:\n"))
-    model = int(input("Specify the model that guides human motion (0: SFM, 1: HSFM):\n"))
-
-    if (model==0): model = False
-    else: model = True
+    model = bool(int(input("Specify the model that guides human motion (0: SFM, 1: HSFM):\n")))
 
     ### COMPUTATIONS
     if (not model): model_title = "sfm"

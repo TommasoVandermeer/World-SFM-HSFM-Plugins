@@ -47,6 +47,7 @@ void WorldSFMPlugin::Load(gazebo::physics::WorldPtr _world, sdf::ElementPtr _sdf
 
 /////////////////////////////////////////////////
 void WorldSFMPlugin::Loading(const common::UpdateInfo &_info) {
+
   /// Both collision models to actors and robot control
   if ((this->attachCollisionToActors) && (this->controlRobot)) {
     if ((!this->robotLoaded) || (!this->actorCollisionLoaded)) {
@@ -79,6 +80,7 @@ void WorldSFMPlugin::Loading(const common::UpdateInfo &_info) {
         std::bind(&WorldSFMPlugin::OnUpdate, this, std::placeholders::_1)));
     }
   }
+
   /// No collision models attached to actors but there is robot control
   if ((!this->attachCollisionToActors) && (this->controlRobot)){
     if (!this->robotLoaded) {
@@ -94,6 +96,7 @@ void WorldSFMPlugin::Loading(const common::UpdateInfo &_info) {
         std::bind(&WorldSFMPlugin::OnUpdate, this, std::placeholders::_1)));
     }
   }
+
   /// No robot control but there are collision models attached to actors
   if ((this->attachCollisionToActors) && (!this->controlRobot)){
     if (!this->actorCollisionLoaded) {
@@ -119,6 +122,7 @@ void WorldSFMPlugin::Loading(const common::UpdateInfo &_info) {
         std::bind(&WorldSFMPlugin::OnUpdateOnlyActors, this, std::placeholders::_1)));
     }
   }
+  
   /// No robot control and no collision models attached to actors
   if ((!this->attachCollisionToActors) && (!this->controlRobot)) {
     this->connections.pop_back();

@@ -42,7 +42,7 @@ agent_params_loader:
       animation_factor: 5.1
       animation_name: "walking"
       people_distance: 6.0
-      ignore_obstacles: ["actor1_collision_model","actor2_collision_model"]
+      ignore_obstacles: [""]
       #group: ["agent2"]
       publish_forces: False
     agent2:
@@ -63,6 +63,6 @@ agent_params_loader:
       animation_factor: 5.1
       animation_name: "walking"
       people_distance: 6.0
-      ignore_obstacles: ["actor1_collision_model","actor2_collision_model"]
+      ignore_obstacles: [""]
       #group: ["agent1"]
       publish_forces: False

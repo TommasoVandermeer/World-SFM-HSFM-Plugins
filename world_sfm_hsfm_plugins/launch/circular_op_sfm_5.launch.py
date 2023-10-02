@@ -5,11 +5,11 @@ from launch_ros.actions import Node
 from launch.actions import ExecuteProcess
 from ament_index_python.packages import get_package_share_directory
 def generate_launch_description():
-    world_file_name = 'circular_op_sfm_28.world'
+    world_file_name = 'circular_op_sfm_5.world'
     pkg_dir = get_package_share_directory('world_sfm_hsfm_plugins')
     os.environ["GAZEBO_MODEL_PATH"] = os.path.join(pkg_dir, 'models')
     world = os.path.join(pkg_dir, 'worlds', world_file_name)
-    config = os.path.join(pkg_dir,'config','circular_op_sfm_28.yaml')
+    config = os.path.join(pkg_dir,'config','circular_op_sfm_5.yaml')
     agents_loader=Node(
         package = 'world_sfm_hsfm_plugins',
         name = 'agent_params_loader',

@@ -35,7 +35,17 @@ ament_target_dependencies(WorldSFMPlugin
   "gazebo_ros"
 )
 ament_export_libraries(WorldSFMPlugin)
-target_link_libraries(WorldSFMPlugin ${GAZEBO_LIBRARIES}) #${Boost_LIBRARIES
+target_link_libraries(WorldSFMPlugin ${GAZEBO_LIBRARIES})
+
+# add_library(WorldHSFMPlugin SHARED src/WorldHSFMPlugin.cpp)
+# target_include_directories(WorldHSFMPlugin PUBLIC include)
+# ament_target_dependencies(WorldHSFMPlugin 
+#   "rclcpp" 
+#   "gazebo" 
+#   "gazebo_ros"
+# )
+# ament_export_libraries(WorldHSFMPlugin)
+# target_link_libraries(WorldHSFMPlugin ${GAZEBO_LIBRARIES}) 
 
 set(msg_files
   "msg/Vector2.msg"
@@ -53,12 +63,19 @@ rosidl_get_typesupport_target(cpp_typesupport_target
   ${PROJECT_NAME} rosidl_typesupport_cpp)
 
 target_link_libraries(WorldSFMPlugin "${cpp_typesupport_target}")
+# target_link_libraries(WorldHSFMPlugin "${cpp_typesupport_target}")
 
 install(TARGETS WorldSFMPlugin
   ARCHIVE DESTINATION lib
   LIBRARY DESTINATION lib
   RUNTIME DESTINATION bin
 )
+
+# install(TARGETS WorldHSFMPlugin
+#   ARCHIVE DESTINATION lib
+#   LIBRARY DESTINATION lib
+#   RUNTIME DESTINATION bin
+# )
 
 install(DIRECTORY include/
         DESTINATION include
