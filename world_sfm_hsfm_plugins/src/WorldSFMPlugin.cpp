@@ -327,7 +327,7 @@ void WorldSFMPlugin::OnUpdate(const common::UpdateInfo &_info) {
         pose.Pos().X(this->sfmEntities[i].position.getX());
         pose.Pos().Y(this->sfmEntities[i].position.getY());
         pose.Pos().Z(0.91 - this->groundHeight);
-        pose.Rot() = ignition::math::Quaterniond(1.5707, 0, yaw);
+        pose.Rot().Euler(1.5707, 0, yaw);
 
         double distanceTraveled = (pose.Pos() - this->entitiesModel[i]->WorldPose().Pos()).Length();
 
@@ -342,7 +342,7 @@ void WorldSFMPlugin::OnUpdate(const common::UpdateInfo &_info) {
         pose.Pos().X(this->sfmEntities[i].position.getX());
         pose.Pos().Y(this->sfmEntities[i].position.getY());
         pose.Pos().Z(this->groundHeight); // This must be exactly the position of the ground, otherwise gravity comes into play
-        pose.Rot() = ignition::math::Quaterniond(0, 0, yaw);
+        pose.Rot().Euler(0, 0, yaw);
 
         this->entitiesModel[i]->SetWorldPose(pose, true, false);
       }
@@ -383,7 +383,7 @@ void WorldSFMPlugin::OnUpdateOnlyActors(const common::UpdateInfo &_info) {
       actorPose.Pos().X(this->sfmActors[i].position.getX());
       actorPose.Pos().Y(this->sfmActors[i].position.getY());
       actorPose.Pos().Z(0.91 - this->groundHeight);
-      actorPose.Rot() = ignition::math::Quaterniond(1.5707, 0, yaw);
+      actorPose.Rot().Euler(1.5707, 0, yaw);
 
       double distanceTraveled = (actorPose.Pos() - this->actors[i]->WorldPose().Pos()).Length();
 
@@ -725,7 +725,7 @@ void WorldSFMPlugin::InitializeActors() {
     actorPose.Pos().X(std::get<0>(this->agentInitPos[i]));
     actorPose.Pos().Y(std::get<1>(this->agentInitPos[i]));
     actorPose.Pos().Z(0.91 - this->groundHeight);
-    actorPose.Rot() = ignition::math::Quaterniond(1.5707, 0, this->agentInitYaw[i] + M_PI_2);
+    actorPose.Rot().Euler(1.5707, 0, this->agentInitYaw[i]);
     this->actors[i]->SetWorldPose(actorPose, false, false);
 
     // Initialize the SFM actors
@@ -809,7 +809,7 @@ void WorldSFMPlugin::InitializeRobot() {
   robotPose.Pos().X(std::get<0>(this->robotInitPos));
   robotPose.Pos().Y(std::get<1>(this->robotInitPos));
   robotPose.Pos().Z(this->groundHeight);
-  robotPose.Rot() = ignition::math::Quaterniond(1.5707, 0, this->robotInitYaw);
+  robotPose.Rot() = ignition::math::Quaterniond(0, 0, this->robotInitYaw);
   this->robotModel->SetWorldPose(robotPose, true, false);
 
   // Initialize the robot as an SFM actor

@@ -145,29 +145,6 @@ private:
   /// \brief Variable to store agent radius
   std::vector<double> agentRadius;
 
-  /// ADDED and REMOVED ******************************************************************************************************
-
-  // /// \brief Variable to store agent goal weight
-  // std::vector<double> agentGoalWeight;
-
-  // /// \brief Variable to store agent obstacle weight
-  // std::vector<double> agentObstacleWeight;
-
-  // /// \brief Variable to store agent social weight
-  // std::vector<double> agentSocialWeight;
-
-  // /// \brief Variable to store agent group gaze weight
-  // std::vector<double> agentGroupGaze;
-
-  // /// \brief Variable to store agent group cohesion weight
-  // std::vector<double> agentGroupCoh;
-
-  // /// \brief Variable to store agent group repulsion weight
-  // std::vector<double> agentGroupRep;
-
-  // /// \brief Variable to store agent people distance
-  // std::vector<double> agentPeopleDist;
-
   /// \brief Variable to store agent relaxation time
   std::vector<double> agentRelaxTime;
 
@@ -212,8 +189,6 @@ private:
 
   /// \brief Variable to store agent k2
   std::vector<double> agentK2;
-
-  /// ******************************************************************************************************
 
   /// \brief Variable to store agent desired velocity
   std::vector<double> agentDesVelocity;
@@ -278,17 +253,6 @@ private:
   /// \brief Robot desired velocity
   double robotVelocity;
 
-  /// ADDED and REMOVED ******************************************************************************************************
-
-  // /// \brief Robot goal weight
-  // double robotGoalWeight;
-
-  // /// \brief Robot obstacle weight
-  // double robotObstacleWeight;
-
-  // /// \brief Robot social weight
-  // double robotSocialWeight;
-
   /// \brief Robot relaxation time
   double robotRelaxTime;
 
@@ -321,8 +285,6 @@ private:
 
   /// \brief Robot k2
   double robotK2;
-
-  /// ***************************************************************************************************************
 
   /// \brief Robot inital yaw
   double robotInitYaw;

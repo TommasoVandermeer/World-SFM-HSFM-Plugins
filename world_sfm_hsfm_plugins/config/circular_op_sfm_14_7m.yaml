@@ -12,7 +12,7 @@ agent_params_loader:
        robot_obstacle_weight: 10.0
        robot_social_weight: 15.0
        robot_velocity: 0.9
-       robot_initial_orientation: -3.1416
+       robot_initial_orientation: -180.0
        robot_waypoints: [-6.5,-0.0,6.5,0.0]
        robot_initial_position: [6.5,0.0]
        robot_ignore_obstacles: ["circular_workspace"]
@@ -21,7 +21,7 @@ agent_params_loader:
        agents: ["agent1","agent2","agent3","agent4","agent5","agent6","agent7","agent8","agent9","agent10","agent11","agent12","agent13","agent14"]
        agent1:
            waypoints: [-5.938,-2.6438,5.938,2.6438]
-           initial_orientation: -2.7227
+           initial_orientation: -156.0
            initial_position: [5.938,2.6438]
            radius: 0.3
            mass: 75
@@ -39,7 +39,7 @@ agent_params_loader:
            publish_forces: False
        agent2:
            waypoints: [-4.3493,-4.8304,4.3493,4.8304]
-           initial_orientation: -2.3038
+           initial_orientation: -132.0
            initial_position: [4.3493,4.8304]
            radius: 0.3
            mass: 75
@@ -57,7 +57,7 @@ agent_params_loader:
            publish_forces: False
        agent3:
            waypoints: [-2.0086,-6.1819,2.0086,6.1819]
-           initial_orientation: -1.885
+           initial_orientation: -108.0
            initial_position: [2.0086,6.1819]
            radius: 0.3
            mass: 75
@@ -75,7 +75,7 @@ agent_params_loader:
            publish_forces: False
        agent4:
            waypoints: [0.6794,-6.4644,-0.6794,6.4644]
-           initial_orientation: -1.4661
+           initial_orientation: -84.0
            initial_position: [-0.6794,6.4644]
            radius: 0.3
            mass: 75
@@ -93,7 +93,7 @@ agent_params_loader:
            publish_forces: False
        agent5:
            waypoints: [3.25,-5.6292,-3.25,5.6292]
-           initial_orientation: -1.0472
+           initial_orientation: -60.0
            initial_position: [-3.25,5.6292]
            radius: 0.3
            mass: 75
@@ -111,7 +111,7 @@ agent_params_loader:
            publish_forces: False
        agent6:
            waypoints: [5.2586,-3.8206,-5.2586,3.8206]
-           initial_orientation: -0.6283
+           initial_orientation: -36.0
            initial_position: [-5.2586,3.8206]
            radius: 0.3
            mass: 75
@@ -129,7 +129,7 @@ agent_params_loader:
            publish_forces: False
        agent7:
            waypoints: [6.358,-1.3514,-6.358,1.3514]
-           initial_orientation: -0.2094
+           initial_orientation: -12.0
            initial_position: [-6.358,1.3514]
            radius: 0.3
            mass: 75
@@ -147,7 +147,7 @@ agent_params_loader:
            publish_forces: False
        agent8:
            waypoints: [6.358,1.3514,-6.358,-1.3514]
-           initial_orientation: 0.2094
+           initial_orientation: 12.0
            initial_position: [-6.358,-1.3514]
            radius: 0.3
            mass: 75
@@ -165,7 +165,7 @@ agent_params_loader:
            publish_forces: False
        agent9:
            waypoints: [5.2586,3.8206,-5.2586,-3.8206]
-           initial_orientation: 0.6283
+           initial_orientation: 36.0
            initial_position: [-5.2586,-3.8206]
            radius: 0.3
            mass: 75
@@ -183,7 +183,7 @@ agent_params_loader:
            publish_forces: False
        agent10:
            waypoints: [3.25,5.6292,-3.25,-5.6292]
-           initial_orientation: 1.0472
+           initial_orientation: 60.0
            initial_position: [-3.25,-5.6292]
            radius: 0.3
            mass: 75
@@ -201,7 +201,7 @@ agent_params_loader:
            publish_forces: False
        agent11:
            waypoints: [0.6794,6.4644,-0.6794,-6.4644]
-           initial_orientation: 1.4661
+           initial_orientation: 84.0
            initial_position: [-0.6794,-6.4644]
            radius: 0.3
            mass: 75
@@ -219,7 +219,7 @@ agent_params_loader:
            publish_forces: False
        agent12:
            waypoints: [-2.0086,6.1819,2.0086,-6.1819]
-           initial_orientation: 1.885
+           initial_orientation: 108.0
            initial_position: [2.0086,-6.1819]
            radius: 0.3
            mass: 75
@@ -237,7 +237,7 @@ agent_params_loader:
            publish_forces: False
        agent13:
            waypoints: [-4.3493,4.8304,4.3493,-4.8304]
-           initial_orientation: 2.3038
+           initial_orientation: 132.0
            initial_position: [4.3493,-4.8304]
            radius: 0.3
            mass: 75
@@ -255,7 +255,7 @@ agent_params_loader:
            publish_forces: False
        agent14:
            waypoints: [-5.938,2.6438,5.938,-2.6438]
-           initial_orientation: 2.7227
+           initial_orientation: 156.0
            initial_position: [5.938,-2.6438]
            radius: 0.3
            mass: 75

@@ -12,17 +12,17 @@ agent_params_loader:
        robot_obstacle_weight: 10.0
        robot_social_weight: 15.0
        robot_velocity: 0.9
-       robot_initial_orientation: -3.1416
+       robot_initial_orientation: -180.0
        robot_waypoints: [-6.5,-0.0,6.5,0.0]
        robot_initial_position: [6.5,0.0]
        robot_ignore_obstacles: ["circular_workspace"]
        attach_cylinder_to_humans: True
        consider_robot: True
-       agents: ["agent1","agent2","agent3","agent4","agent5","agent6","agent7","agent8","agent9","agent10","agent11","agent12","agent13","agent14","agent15","agent16","agent17","agent18","agent19","agent20","agent21","agent22","agent23","agent24","agent25","agent26","agent27","agent28","agent29","agent30","agent31","agent32","agent33","agent34","agent35"]
+       agents: ["agent1","agent2","agent3","agent4","agent5","agent6","agent7","agent8","agent9","agent10","agent11","agent12","agent13","agent14","agent15","agent16","agent17","agent18","agent19","agent20","agent21","agent22","agent23","agent24","agent25","agent26","agent27","agent28","agent29","agent30","agent31","agent32","agent33","agent34","agent35","agent36","agent37","agent38","agent39","agent40","agent41","agent42","agent43","agent44","agent45","agent46","agent47","agent48","agent49"]
        agent1:
-           waypoints: [-6.4013,-1.1287,6.4013,1.1287]
-           initial_orientation: -2.9671
-           initial_position: [6.4013,1.1287]
+           waypoints: [-6.4487,-0.8147,6.4487,0.8147]
+           initial_orientation: -172.8
+           initial_position: [6.4487,0.8147]
            radius: 0.3
            mass: 75
            goal_weight: 2.0
@@ -38,9 +38,9 @@ agent_params_loader:
            ignore_obstacles: ["circular_workspace"]
            publish_forces: False
        agent2:
-           waypoints: [-6.108,-2.2231,6.108,2.2231]
-           initial_orientation: -2.7925
-           initial_position: [6.108,2.2231]
+           waypoints: [-6.2958,-1.6165,6.2958,1.6165]
+           initial_orientation: -165.6
+           initial_position: [6.2958,1.6165]
            radius: 0.3
            mass: 75
            goal_weight: 2.0
@@ -56,9 +56,9 @@ agent_params_loader:
            ignore_obstacles: ["circular_workspace"]
            publish_forces: False
        agent3:
-           waypoints: [-5.6292,-3.25,5.6292,3.25]
-           initial_orientation: -2.618
-           initial_position: [5.6292,3.25]
+           waypoints: [-6.0435,-2.3928,6.0435,2.3928]
+           initial_orientation: -158.4
+           initial_position: [6.0435,2.3928]
            radius: 0.3
            mass: 75
            goal_weight: 2.0
@@ -74,9 +74,9 @@ agent_params_loader:
            ignore_obstacles: ["circular_workspace"]
            publish_forces: False
        agent4:
-           waypoints: [-4.9793,-4.1781,4.9793,4.1781]
-           initial_orientation: -2.4435
-           initial_position: [4.9793,4.1781]
+           waypoints: [-5.696,-3.1314,5.696,3.1314]
+           initial_orientation: -151.2
+           initial_position: [5.696,3.1314]
            radius: 0.3
            mass: 75
            goal_weight: 2.0
@@ -92,9 +92,9 @@ agent_params_loader:
            ignore_obstacles: ["circular_workspace"]
            publish_forces: False
        agent5:
-           waypoints: [-4.1781,-4.9793,4.1781,4.9793]
-           initial_orientation: -2.2689
-           initial_position: [4.1781,4.9793]
+           waypoints: [-5.2586,-3.8206,5.2586,3.8206]
+           initial_orientation: -144.0
+           initial_position: [5.2586,3.8206]
            radius: 0.3
            mass: 75
            goal_weight: 2.0
@@ -110,9 +110,9 @@ agent_params_loader:
            ignore_obstacles: ["circular_workspace"]
            publish_forces: False
        agent6:
-           waypoints: [-3.25,-5.6292,3.25,5.6292]
-           initial_orientation: -2.0944
-           initial_position: [3.25,5.6292]
+           waypoints: [-4.7383,-4.4496,4.7383,4.4496]
+           initial_orientation: -136.8
+           initial_position: [4.7383,4.4496]
            radius: 0.3
            mass: 75
            goal_weight: 2.0
@@ -128,9 +128,9 @@ agent_params_loader:
            ignore_obstacles: ["circular_workspace"]
            publish_forces: False
        agent7:
-           waypoints: [-2.2231,-6.108,2.2231,6.108]
-           initial_orientation: -1.9199
-           initial_position: [2.2231,6.108]
+           waypoints: [-4.1433,-5.0083,4.1433,5.0083]
+           initial_orientation: -129.6
+           initial_position: [4.1433,5.0083]
            radius: 0.3
            mass: 75
            goal_weight: 2.0
@@ -146,9 +146,9 @@ agent_params_loader:
            ignore_obstacles: ["circular_workspace"]
            publish_forces: False
        agent8:
-           waypoints: [-1.1287,-6.4013,1.1287,6.4013]
-           initial_orientation: -1.7453
-           initial_position: [1.1287,6.4013]
+           waypoints: [-3.4829,-5.4881,3.4829,5.4881]
+           initial_orientation: -122.4
+           initial_position: [3.4829,5.4881]
            radius: 0.3
            mass: 75
            goal_weight: 2.0
@@ -164,9 +164,9 @@ agent_params_loader:
            ignore_obstacles: ["circular_workspace"]
            publish_forces: False
        agent9:
-           waypoints: [-0.0,-6.5,0.0,6.5]
-           initial_orientation: -1.5708
-           initial_position: [0.0,6.5]
+           waypoints: [-2.7676,-5.8814,2.7676,5.8814]
+           initial_orientation: -115.2
+           initial_position: [2.7676,5.8814]
            radius: 0.3
            mass: 75
            goal_weight: 2.0
@@ -182,9 +182,9 @@ agent_params_loader:
            ignore_obstacles: ["circular_workspace"]
            publish_forces: False
        agent10:
-           waypoints: [1.1287,-6.4013,-1.1287,6.4013]
-           initial_orientation: -1.3963
-           initial_position: [-1.1287,6.4013]
+           waypoints: [-2.0086,-6.1819,2.0086,6.1819]
+           initial_orientation: -108.0
+           initial_position: [2.0086,6.1819]
            radius: 0.3
            mass: 75
            goal_weight: 2.0
@@ -200,9 +200,9 @@ agent_params_loader:
            ignore_obstacles: ["circular_workspace"]
            publish_forces: False
        agent11:
-           waypoints: [2.2231,-6.108,-2.2231,6.108]
-           initial_orientation: -1.2217
-           initial_position: [-2.2231,6.108]
+           waypoints: [-1.218,-6.3849,1.218,6.3849]
+           initial_orientation: -100.8
+           initial_position: [1.218,6.3849]
            radius: 0.3
            mass: 75
            goal_weight: 2.0
@@ -218,9 +218,9 @@ agent_params_loader:
            ignore_obstacles: ["circular_workspace"]
            publish_forces: False
        agent12:
-           waypoints: [3.25,-5.6292,-3.25,5.6292]
-           initial_orientation: -1.0472
-           initial_position: [-3.25,5.6292]
+           waypoints: [-0.4081,-6.4872,0.4081,6.4872]
+           initial_orientation: -93.6
+           initial_position: [0.4081,6.4872]
            radius: 0.3
            mass: 75
            goal_weight: 2.0
@@ -236,9 +236,9 @@ agent_params_loader:
            ignore_obstacles: ["circular_workspace"]
            publish_forces: False
        agent13:
-           waypoints: [4.1781,-4.9793,-4.1781,4.9793]
-           initial_orientation: -0.8727
-           initial_position: [-4.1781,4.9793]
+           waypoints: [0.4081,-6.4872,-0.4081,6.4872]
+           initial_orientation: -86.4
+           initial_position: [-0.4081,6.4872]
            radius: 0.3
            mass: 75
            goal_weight: 2.0
@@ -254,9 +254,9 @@ agent_params_loader:
            ignore_obstacles: ["circular_workspace"]
            publish_forces: False
        agent14:
-           waypoints: [4.9793,-4.1781,-4.9793,4.1781]
-           initial_orientation: -0.6981
-           initial_position: [-4.9793,4.1781]
+           waypoints: [1.218,-6.3849,-1.218,6.3849]
+           initial_orientation: -79.2
+           initial_position: [-1.218,6.3849]
            radius: 0.3
            mass: 75
            goal_weight: 2.0
@@ -272,9 +272,9 @@ agent_params_loader:
            ignore_obstacles: ["circular_workspace"]
            publish_forces: False
        agent15:
-           waypoints: [5.6292,-3.25,-5.6292,3.25]
-           initial_orientation: -0.5236
-           initial_position: [-5.6292,3.25]
+           waypoints: [2.0086,-6.1819,-2.0086,6.1819]
+           initial_orientation: -72.0
+           initial_position: [-2.0086,6.1819]
            radius: 0.3
            mass: 75
            goal_weight: 2.0
@@ -290,9 +290,9 @@ agent_params_loader:
            ignore_obstacles: ["circular_workspace"]
            publish_forces: False
        agent16:
-           waypoints: [6.108,-2.2231,-6.108,2.2231]
-           initial_orientation: -0.3491
-           initial_position: [-6.108,2.2231]
+           waypoints: [2.7676,-5.8814,-2.7676,5.8814]
+           initial_orientation: -64.8
+           initial_position: [-2.7676,5.8814]
            radius: 0.3
            mass: 75
            goal_weight: 2.0
@@ -308,9 +308,9 @@ agent_params_loader:
            ignore_obstacles: ["circular_workspace"]
            publish_forces: False
        agent17:
-           waypoints: [6.4013,-1.1287,-6.4013,1.1287]
-           initial_orientation: -0.1745
-           initial_position: [-6.4013,1.1287]
+           waypoints: [3.4829,-5.4881,-3.4829,5.4881]
+           initial_orientation: -57.6
+           initial_position: [-3.4829,5.4881]
            radius: 0.3
            mass: 75
            goal_weight: 2.0
@@ -326,9 +326,9 @@ agent_params_loader:
            ignore_obstacles: ["circular_workspace"]
            publish_forces: False
        agent18:
-           waypoints: [6.5,-0.0,-6.5,0.0]
-           initial_orientation: 0.0
-           initial_position: [-6.5,0.0]
+           waypoints: [4.1433,-5.0083,-4.1433,5.0083]
+           initial_orientation: -50.4
+           initial_position: [-4.1433,5.0083]
            radius: 0.3
            mass: 75
            goal_weight: 2.0
@@ -344,9 +344,9 @@ agent_params_loader:
            ignore_obstacles: ["circular_workspace"]
            publish_forces: False
        agent19:
-           waypoints: [6.4013,1.1287,-6.4013,-1.1287]
-           initial_orientation: 0.1745
-           initial_position: [-6.4013,-1.1287]
+           waypoints: [4.7383,-4.4496,-4.7383,4.4496]
+           initial_orientation: -43.2
+           initial_position: [-4.7383,4.4496]
            radius: 0.3
            mass: 75
            goal_weight: 2.0
@@ -362,9 +362,9 @@ agent_params_loader:
            ignore_obstacles: ["circular_workspace"]
            publish_forces: False
        agent20:
-           waypoints: [6.108,2.2231,-6.108,-2.2231]
-           initial_orientation: 0.3491
-           initial_position: [-6.108,-2.2231]
+           waypoints: [5.2586,-3.8206,-5.2586,3.8206]
+           initial_orientation: -36.0
+           initial_position: [-5.2586,3.8206]
            radius: 0.3
            mass: 75
            goal_weight: 2.0
@@ -380,9 +380,9 @@ agent_params_loader:
            ignore_obstacles: ["circular_workspace"]
            publish_forces: False
        agent21:
-           waypoints: [5.6292,3.25,-5.6292,-3.25]
-           initial_orientation: 0.5236
-           initial_position: [-5.6292,-3.25]
+           waypoints: [5.696,-3.1314,-5.696,3.1314]
+           initial_orientation: -28.8
+           initial_position: [-5.696,3.1314]
            radius: 0.3
            mass: 75
            goal_weight: 2.0
@@ -398,9 +398,9 @@ agent_params_loader:
            ignore_obstacles: ["circular_workspace"]
            publish_forces: False
        agent22:
-           waypoints: [4.9793,4.1781,-4.9793,-4.1781]
-           initial_orientation: 0.6981
-           initial_position: [-4.9793,-4.1781]
+           waypoints: [6.0435,-2.3928,-6.0435,2.3928]
+           initial_orientation: -21.6
+           initial_position: [-6.0435,2.3928]
            radius: 0.3
            mass: 75
            goal_weight: 2.0
@@ -416,9 +416,9 @@ agent_params_loader:
            ignore_obstacles: ["circular_workspace"]
            publish_forces: False
        agent23:
-           waypoints: [4.1781,4.9793,-4.1781,-4.9793]
-           initial_orientation: 0.8727
-           initial_position: [-4.1781,-4.9793]
+           waypoints: [6.2958,-1.6165,-6.2958,1.6165]
+           initial_orientation: -14.4
+           initial_position: [-6.2958,1.6165]
            radius: 0.3
            mass: 75
            goal_weight: 2.0
@@ -434,9 +434,9 @@ agent_params_loader:
            ignore_obstacles: ["circular_workspace"]
            publish_forces: False
        agent24:
-           waypoints: [3.25,5.6292,-3.25,-5.6292]
-           initial_orientation: 1.0472
-           initial_position: [-3.25,-5.6292]
+           waypoints: [6.4487,-0.8147,-6.4487,0.8147]
+           initial_orientation: -7.2
+           initial_position: [-6.4487,0.8147]
            radius: 0.3
            mass: 75
            goal_weight: 2.0
@@ -452,9 +452,9 @@ agent_params_loader:
            ignore_obstacles: ["circular_workspace"]
            publish_forces: False
        agent25:
-           waypoints: [2.2231,6.108,-2.2231,-6.108]
-           initial_orientation: 1.2217
-           initial_position: [-2.2231,-6.108]
+           waypoints: [6.5,0.0,-6.5,-0.0]
+           initial_orientation: 0.0
+           initial_position: [-6.5,-0.0]
            radius: 0.3
            mass: 75
            goal_weight: 2.0
@@ -470,9 +470,9 @@ agent_params_loader:
            ignore_obstacles: ["circular_workspace"]
            publish_forces: False
        agent26:
-           waypoints: [1.1287,6.4013,-1.1287,-6.4013]
-           initial_orientation: 1.3963
-           initial_position: [-1.1287,-6.4013]
+           waypoints: [6.4487,0.8147,-6.4487,-0.8147]
+           initial_orientation: 7.2
+           initial_position: [-6.4487,-0.8147]
            radius: 0.3
            mass: 75
            goal_weight: 2.0
@@ -488,9 +488,9 @@ agent_params_loader:
            ignore_obstacles: ["circular_workspace"]
            publish_forces: False
        agent27:
-           waypoints: [0.0,6.5,-0.0,-6.5]
-           initial_orientation: 1.5708
-           initial_position: [-0.0,-6.5]
+           waypoints: [6.2958,1.6165,-6.2958,-1.6165]
+           initial_orientation: 14.4
+           initial_position: [-6.2958,-1.6165]
            radius: 0.3
            mass: 75
            goal_weight: 2.0
@@ -506,9 +506,9 @@ agent_params_loader:
            ignore_obstacles: ["circular_workspace"]
            publish_forces: False
        agent28:
-           waypoints: [-1.1287,6.4013,1.1287,-6.4013]
-           initial_orientation: 1.7453
-           initial_position: [1.1287,-6.4013]
+           waypoints: [6.0435,2.3928,-6.0435,-2.3928]
+           initial_orientation: 21.6
+           initial_position: [-6.0435,-2.3928]
            radius: 0.3
            mass: 75
            goal_weight: 2.0
@@ -524,9 +524,9 @@ agent_params_loader:
            ignore_obstacles: ["circular_workspace"]
            publish_forces: False
        agent29:
-           waypoints: [-2.2231,6.108,2.2231,-6.108]
-           initial_orientation: 1.9199
-           initial_position: [2.2231,-6.108]
+           waypoints: [5.696,3.1314,-5.696,-3.1314]
+           initial_orientation: 28.8
+           initial_position: [-5.696,-3.1314]
            radius: 0.3
            mass: 75
            goal_weight: 2.0
@@ -542,9 +542,9 @@ agent_params_loader:
            ignore_obstacles: ["circular_workspace"]
            publish_forces: False
        agent30:
-           waypoints: [-3.25,5.6292,3.25,-5.6292]
-           initial_orientation: 2.0944
-           initial_position: [3.25,-5.6292]
+           waypoints: [5.2586,3.8206,-5.2586,-3.8206]
+           initial_orientation: 36.0
+           initial_position: [-5.2586,-3.8206]
            radius: 0.3
            mass: 75
            goal_weight: 2.0
@@ -560,9 +560,9 @@ agent_params_loader:
            ignore_obstacles: ["circular_workspace"]
            publish_forces: False
        agent31:
-           waypoints: [-4.1781,4.9793,4.1781,-4.9793]
-           initial_orientation: 2.2689
-           initial_position: [4.1781,-4.9793]
+           waypoints: [4.7383,4.4496,-4.7383,-4.4496]
+           initial_orientation: 43.2
+           initial_position: [-4.7383,-4.4496]
            radius: 0.3
            mass: 75
            goal_weight: 2.0
@@ -578,9 +578,9 @@ agent_params_loader:
            ignore_obstacles: ["circular_workspace"]
            publish_forces: False
        agent32:
-           waypoints: [-4.9793,4.1781,4.9793,-4.1781]
-           initial_orientation: 2.4435
-           initial_position: [4.9793,-4.1781]
+           waypoints: [4.1433,5.0083,-4.1433,-5.0083]
+           initial_orientation: 50.4
+           initial_position: [-4.1433,-5.0083]
            radius: 0.3
            mass: 75
            goal_weight: 2.0
@@ -596,9 +596,9 @@ agent_params_loader:
            ignore_obstacles: ["circular_workspace"]
            publish_forces: False
        agent33:
-           waypoints: [-5.6292,3.25,5.6292,-3.25]
-           initial_orientation: 2.618
-           initial_position: [5.6292,-3.25]
+           waypoints: [3.4829,5.4881,-3.4829,-5.4881]
+           initial_orientation: 57.6
+           initial_position: [-3.4829,-5.4881]
            radius: 0.3
            mass: 75
            goal_weight: 2.0
@@ -614,9 +614,9 @@ agent_params_loader:
            ignore_obstacles: ["circular_workspace"]
            publish_forces: False
        agent34:
-           waypoints: [-6.108,2.2231,6.108,-2.2231]
-           initial_orientation: 2.7925
-           initial_position: [6.108,-2.2231]
+           waypoints: [2.7676,5.8814,-2.7676,-5.8814]
+           initial_orientation: 64.8
+           initial_position: [-2.7676,-5.8814]
            radius: 0.3
            mass: 75
            goal_weight: 2.0
@@ -632,9 +632,261 @@ agent_params_loader:
            ignore_obstacles: ["circular_workspace"]
            publish_forces: False
        agent35:
-           waypoints: [-6.4013,1.1287,6.4013,-1.1287]
-           initial_orientation: 2.9671
-           initial_position: [6.4013,-1.1287]
+           waypoints: [2.0086,6.1819,-2.0086,-6.1819]
+           initial_orientation: 72.0
+           initial_position: [-2.0086,-6.1819]
+           radius: 0.3
+           mass: 75
+           goal_weight: 2.0
+           obstacle_weight: 10.0
+           social_weight: 15.0
+           group_gaze_weight: 0.0
+           group_coh_weight: 0.0
+           group_rep_weight: 0.0
+           velocity: 0.9
+           animation_factor: 5.1
+           animation_name: "walking"
+           people_distance: 6.0
+           ignore_obstacles: ["circular_workspace"]
+           publish_forces: False
+       agent36:
+           waypoints: [1.218,6.3849,-1.218,-6.3849]
+           initial_orientation: 79.2
+           initial_position: [-1.218,-6.3849]
+           radius: 0.3
+           mass: 75
+           goal_weight: 2.0
+           obstacle_weight: 10.0
+           social_weight: 15.0
+           group_gaze_weight: 0.0
+           group_coh_weight: 0.0
+           group_rep_weight: 0.0
+           velocity: 0.9
+           animation_factor: 5.1
+           animation_name: "walking"
+           people_distance: 6.0
+           ignore_obstacles: ["circular_workspace"]
+           publish_forces: False
+       agent37:
+           waypoints: [0.4081,6.4872,-0.4081,-6.4872]
+           initial_orientation: 86.4
+           initial_position: [-0.4081,-6.4872]
+           radius: 0.3
+           mass: 75
+           goal_weight: 2.0
+           obstacle_weight: 10.0
+           social_weight: 15.0
+           group_gaze_weight: 0.0
+           group_coh_weight: 0.0
+           group_rep_weight: 0.0
+           velocity: 0.9
+           animation_factor: 5.1
+           animation_name: "walking"
+           people_distance: 6.0
+           ignore_obstacles: ["circular_workspace"]
+           publish_forces: False
+       agent38:
+           waypoints: [-0.4081,6.4872,0.4081,-6.4872]
+           initial_orientation: 93.6
+           initial_position: [0.4081,-6.4872]
+           radius: 0.3
+           mass: 75
+           goal_weight: 2.0
+           obstacle_weight: 10.0
+           social_weight: 15.0
+           group_gaze_weight: 0.0
+           group_coh_weight: 0.0
+           group_rep_weight: 0.0
+           velocity: 0.9
+           animation_factor: 5.1
+           animation_name: "walking"
+           people_distance: 6.0
+           ignore_obstacles: ["circular_workspace"]
+           publish_forces: False
+       agent39:
+           waypoints: [-1.218,6.3849,1.218,-6.3849]
+           initial_orientation: 100.8
+           initial_position: [1.218,-6.3849]
+           radius: 0.3
+           mass: 75
+           goal_weight: 2.0
+           obstacle_weight: 10.0
+           social_weight: 15.0
+           group_gaze_weight: 0.0
+           group_coh_weight: 0.0
+           group_rep_weight: 0.0
+           velocity: 0.9
+           animation_factor: 5.1
+           animation_name: "walking"
+           people_distance: 6.0
+           ignore_obstacles: ["circular_workspace"]
+           publish_forces: False
+       agent40:
+           waypoints: [-2.0086,6.1819,2.0086,-6.1819]
+           initial_orientation: 108.0
+           initial_position: [2.0086,-6.1819]
+           radius: 0.3
+           mass: 75
+           goal_weight: 2.0
+           obstacle_weight: 10.0
+           social_weight: 15.0
+           group_gaze_weight: 0.0
+           group_coh_weight: 0.0
+           group_rep_weight: 0.0
+           velocity: 0.9
+           animation_factor: 5.1
+           animation_name: "walking"
+           people_distance: 6.0
+           ignore_obstacles: ["circular_workspace"]
+           publish_forces: False
+       agent41:
+           waypoints: [-2.7676,5.8814,2.7676,-5.8814]
+           initial_orientation: 115.2
+           initial_position: [2.7676,-5.8814]
+           radius: 0.3
+           mass: 75
+           goal_weight: 2.0
+           obstacle_weight: 10.0
+           social_weight: 15.0
+           group_gaze_weight: 0.0
+           group_coh_weight: 0.0
+           group_rep_weight: 0.0
+           velocity: 0.9
+           animation_factor: 5.1
+           animation_name: "walking"
+           people_distance: 6.0
+           ignore_obstacles: ["circular_workspace"]
+           publish_forces: False
+       agent42:
+           waypoints: [-3.4829,5.4881,3.4829,-5.4881]
+           initial_orientation: 122.4
+           initial_position: [3.4829,-5.4881]
+           radius: 0.3
+           mass: 75
+           goal_weight: 2.0
+           obstacle_weight: 10.0
+           social_weight: 15.0
+           group_gaze_weight: 0.0
+           group_coh_weight: 0.0
+           group_rep_weight: 0.0
+           velocity: 0.9
+           animation_factor: 5.1
+           animation_name: "walking"
+           people_distance: 6.0
+           ignore_obstacles: ["circular_workspace"]
+           publish_forces: False
+       agent43:
+           waypoints: [-4.1433,5.0083,4.1433,-5.0083]
+           initial_orientation: 129.6
+           initial_position: [4.1433,-5.0083]
+           radius: 0.3
+           mass: 75
+           goal_weight: 2.0
+           obstacle_weight: 10.0
+           social_weight: 15.0
+           group_gaze_weight: 0.0
+           group_coh_weight: 0.0
+           group_rep_weight: 0.0
+           velocity: 0.9
+           animation_factor: 5.1
+           animation_name: "walking"
+           people_distance: 6.0
+           ignore_obstacles: ["circular_workspace"]
+           publish_forces: False
+       agent44:
+           waypoints: [-4.7383,4.4496,4.7383,-4.4496]
+           initial_orientation: 136.8
+           initial_position: [4.7383,-4.4496]
+           radius: 0.3
+           mass: 75
+           goal_weight: 2.0
+           obstacle_weight: 10.0
+           social_weight: 15.0
+           group_gaze_weight: 0.0
+           group_coh_weight: 0.0
+           group_rep_weight: 0.0
+           velocity: 0.9
+           animation_factor: 5.1
+           animation_name: "walking"
+           people_distance: 6.0
+           ignore_obstacles: ["circular_workspace"]
+           publish_forces: False
+       agent45:
+           waypoints: [-5.2586,3.8206,5.2586,-3.8206]
+           initial_orientation: 144.0
+           initial_position: [5.2586,-3.8206]
+           radius: 0.3
+           mass: 75
+           goal_weight: 2.0
+           obstacle_weight: 10.0
+           social_weight: 15.0
+           group_gaze_weight: 0.0
+           group_coh_weight: 0.0
+           group_rep_weight: 0.0
+           velocity: 0.9
+           animation_factor: 5.1
+           animation_name: "walking"
+           people_distance: 6.0
+           ignore_obstacles: ["circular_workspace"]
+           publish_forces: False
+       agent46:
+           waypoints: [-5.696,3.1314,5.696,-3.1314]
+           initial_orientation: 151.2
+           initial_position: [5.696,-3.1314]
+           radius: 0.3
+           mass: 75
+           goal_weight: 2.0
+           obstacle_weight: 10.0
+           social_weight: 15.0
+           group_gaze_weight: 0.0
+           group_coh_weight: 0.0
+           group_rep_weight: 0.0
+           velocity: 0.9
+           animation_factor: 5.1
+           animation_name: "walking"
+           people_distance: 6.0
+           ignore_obstacles: ["circular_workspace"]
+           publish_forces: False
+       agent47:
+           waypoints: [-6.0435,2.3928,6.0435,-2.3928]
+           initial_orientation: 158.4
+           initial_position: [6.0435,-2.3928]
+           radius: 0.3
+           mass: 75
+           goal_weight: 2.0
+           obstacle_weight: 10.0
+           social_weight: 15.0
+           group_gaze_weight: 0.0
+           group_coh_weight: 0.0
+           group_rep_weight: 0.0
+           velocity: 0.9
+           animation_factor: 5.1
+           animation_name: "walking"
+           people_distance: 6.0
+           ignore_obstacles: ["circular_workspace"]
+           publish_forces: False
+       agent48:
+           waypoints: [-6.2958,1.6165,6.2958,-1.6165]
+           initial_orientation: 165.6
+           initial_position: [6.2958,-1.6165]
+           radius: 0.3
+           mass: 75
+           goal_weight: 2.0
+           obstacle_weight: 10.0
+           social_weight: 15.0
+           group_gaze_weight: 0.0
+           group_coh_weight: 0.0
+           group_rep_weight: 0.0
+           velocity: 0.9
+           animation_factor: 5.1
+           animation_name: "walking"
+           people_distance: 6.0
+           ignore_obstacles: ["circular_workspace"]
+           publish_forces: False
+       agent49:
+           waypoints: [-6.4487,0.8147,6.4487,-0.8147]
+           initial_orientation: 172.8
+           initial_position: [6.4487,-0.8147]
            radius: 0.3
            mass: 75
            goal_weight: 2.0

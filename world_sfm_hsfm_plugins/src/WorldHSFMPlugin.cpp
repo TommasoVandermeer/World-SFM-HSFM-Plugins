@@ -303,10 +303,10 @@ void WorldHSFMPlugin::OnUpdate(const common::UpdateInfo &_info) {
       this->sfmActors = hsfm::HSFM.computeForces(this->sfmActors);
       if (!this->rungeKutta45) {
         this->sfmActors = hsfm::HSFM.updatePosition(this->sfmActors, dt);
-        sfm::SFM.updatePosition(this->sfmRobot, dt);
+        hsfm::HSFM.updatePosition(this->sfmRobot, dt);
       } else {
         this->sfmActors = hsfm::HSFM.updatePositionRKF45(this->sfmActors, _info.simTime.Double(), dt);
-        sfm::SFM.updatePositionRKF45(this->sfmRobot, _info.simTime.Double(), dt);
+        hsfm::HSFM.updatePositionRKF45(this->sfmRobot, _info.simTime.Double(), dt);
       }
       // Save new values
       this->sfmEntities = this->sfmActors;
@@ -327,7 +327,7 @@ void WorldHSFMPlugin::OnUpdate(const common::UpdateInfo &_info) {
         pose.Pos().X(this->sfmEntities[i].position.getX());
         pose.Pos().Y(this->sfmEntities[i].position.getY());
         pose.Pos().Z(0.91 - this->groundHeight);
-        pose.Rot() = ignition::math::Quaterniond(1.5707, 0, yaw);
+        pose.Rot().Euler(1.5707, 0, yaw);
 
         double distanceTraveled = (pose.Pos() - this->entitiesModel[i]->WorldPose().Pos()).Length();
 
@@ -342,7 +342,7 @@ void WorldHSFMPlugin::OnUpdate(const common::UpdateInfo &_info) {
         pose.Pos().X(this->sfmEntities[i].position.getX());
         pose.Pos().Y(this->sfmEntities[i].position.getY());
         pose.Pos().Z(this->groundHeight); // This must be exactly the position of the ground, otherwise gravity comes into play
-        pose.Rot() = ignition::math::Quaterniond(0, 0, yaw);
+        pose.Rot().Euler(0, 0, yaw);
 
         this->entitiesModel[i]->SetWorldPose(pose, true, false);
       }
@@ -383,7 +383,7 @@ void WorldHSFMPlugin::OnUpdateOnlyActors(const common::UpdateInfo &_info) {
       actorPose.Pos().X(this->sfmActors[i].position.getX());
       actorPose.Pos().Y(this->sfmActors[i].position.getY());
       actorPose.Pos().Z(0.91 - this->groundHeight);
-      actorPose.Rot() = ignition::math::Quaterniond(1.5707, 0, yaw);
+      actorPose.Rot().Euler(1.5707, 0, yaw);
 
       double distanceTraveled = (actorPose.Pos() - this->actors[i]->WorldPose().Pos()).Length();
 
@@ -841,10 +841,10 @@ void WorldHSFMPlugin::InitializeActors() {
     actorPose.Pos().X(std::get<0>(this->agentInitPos[i]));
     actorPose.Pos().Y(std::get<1>(this->agentInitPos[i]));
     actorPose.Pos().Z(0.91 - this->groundHeight);
-    actorPose.Rot() = ignition::math::Quaterniond(1.5707, 0, this->agentInitYaw[i] + M_PI_2);
+    actorPose.Rot().Euler(1.5707, 0, this->agentInitYaw[i]);// + M_PI_2);
     this->actors[i]->SetWorldPose(actorPose, false, false);
 
-    // Initialize the SFM actors
+    // Initialize the HSFM actors
     ignition::math::Pose3d pose = this->actors[i]->WorldPose();
     ignition::math::Vector3d linvel = this->actors[i]->WorldLinearVel();
     ignition::math::Vector3d angvel = this->actors[i]->WorldAngularVel();
@@ -856,12 +856,22 @@ void WorldHSFMPlugin::InitializeActors() {
     agent.linearVelocity = linvel.Length();
     agent.angularVelocity = angvel.Z();
     agent.desiredVelocity = this->agentDesVelocity[i];
-    agent.params.forceFactorDesired = this->agentGoalWeight[i];
-    agent.params.forceFactorObstacle = this->agentObstacleWeight[i];
-    agent.params.forceFactorSocial = this->agentSocialWeight[i];
-    agent.params.forceFactorGroupGaze = this->agentGroupGaze[i];
-    agent.params.forceFactorGroupCoherence = this->agentGroupCoh[i];
-    agent.params.forceFactorGroupRepulsion = this->agentGroupRep[i];
+    agent.mass = this->agentMass[i];
+    agent.params.relaxationTime = this->agentRelaxTime[i];
+    agent.params.kOrthogonal = this->agentKOrthogonal[i];
+    agent.params.kDamping = this->agentKDamping[i];
+    agent.params.kLambda = this->agentKLambda[i];
+    agent.params.alpha = this->agentAlpha[i];
+    agent.params.groupDistanceForward = this->agentGroupDistForw[i];
+    agent.params.groupDistanceOrthogonal = this->agentGroupDistOrth[i];
+    agent.params.k1g = this->agentK1g[i];
+    agent.params.k2g = this->agentK2g[i];
+    agent.params.Ai = this->agentAi[i];
+    agent.params.Aw = this->agentAw[i];
+    agent.params.Bi = this->agentBi[i];
+    agent.params.Bw = this->agentBw[i];
+    agent.params.k1 = this->agentK1[i];
+    agent.params.k2 = this->agentK2[i];
     agent.radius = this->agentRadius[i];
     if (this->agentGroup[i].size() > 0) {
       agent.groupId = agent.id;
@@ -885,7 +895,7 @@ void WorldHSFMPlugin::InitializeActors() {
 void WorldHSFMPlugin::CreateModelForActors() {
   for (unsigned int i = 0; i < this->agentModel.size(); ++i) {
 
-    std::string modelName = this->agentNames[i] + "_collision_model";
+    std::string modelName = this->agentNames[i] + "_collision_cylinder";
     this->actorCollisionNames.push_back(modelName);
 
     std::string modelString(
@@ -916,8 +926,6 @@ void WorldHSFMPlugin::CreateModelForActors() {
 void WorldHSFMPlugin::InitializeRobot() {
   this->robotModel = this->world->ModelByName(this->robotName);
   this->robotModel->SetWorld(this->world);
-  //std::cout<<"Robot name: "<<this->robotModel->GetName()<<std::endl;
-  //std::cout<<"robot_first_goal: "<<std::get<0>(this->robotGoals[0])<<","<<std::get<1>(this->robotGoals[0])<<", robot_initial_position: "<<std::get<0>(this->robotInitPos)<<","<<std::get<1>(this->robotInitPos)<<", robot_initial_yaw: "<<this->robotInitYaw<<", robot_mass: "<<this->robotMass<<", robot_radius: "<<this->robotRadius<<", robot_velocity: "<<this->robotVelocity<<", robot_goal_weight: "<<this->robotGoalWeight<<", robot_obstacle_weight: "<<this->robotObstacleWeight<<", robot_social_weight: "<<this->robotSocialWeight<<", first_ignored_obstacle: "<<this->robotIgnoreObs[0]<<std::endl;
 
   ignition::math::Pose3d robotPose = this->robotModel->WorldPose();
 
@@ -925,7 +933,7 @@ void WorldHSFMPlugin::InitializeRobot() {
   robotPose.Pos().X(std::get<0>(this->robotInitPos));
   robotPose.Pos().Y(std::get<1>(this->robotInitPos));
   robotPose.Pos().Z(this->groundHeight);
-  robotPose.Rot() = ignition::math::Quaterniond(1.5707, 0, this->robotInitYaw);
+  robotPose.Rot().Euler(0, 0, this->robotInitYaw);
   this->robotModel->SetWorldPose(robotPose, true, false);
 
   // Initialize the robot as an SFM actor
@@ -940,12 +948,22 @@ void WorldHSFMPlugin::InitializeRobot() {
   agent.linearVelocity = linvel.Length();
   agent.angularVelocity = angvel.Z();
   agent.desiredVelocity = this->robotVelocity;
-  agent.params.forceFactorDesired = this->robotGoalWeight;
-  agent.params.forceFactorObstacle = this->robotObstacleWeight;
-  agent.params.forceFactorSocial = this->robotSocialWeight;
-  agent.params.forceFactorGroupGaze = 0.0;
-  agent.params.forceFactorGroupCoherence = 0.0;
-  agent.params.forceFactorGroupRepulsion = 0.0;
+  agent.mass = this->robotMass;
+  agent.params.relaxationTime = this->robotRelaxTime;
+  agent.params.kOrthogonal = this->robotKOrthogonal;
+  agent.params.kDamping = this->robotKDamping;
+  agent.params.kLambda = this->robotKLambda;
+  agent.params.alpha = this->robotAlpha;
+  agent.params.groupDistanceForward = 0.0;
+  agent.params.groupDistanceOrthogonal = 0.0;
+  agent.params.k1g = 0.0;
+  agent.params.k2g = 0.0;
+  agent.params.Ai = this->robotAi;
+  agent.params.Aw = this->robotAw;
+  agent.params.Bi = this->robotBi;
+  agent.params.Bw = this->robotBi;
+  agent.params.k1 = this->robotK1;
+  agent.params.k2 = this->robotK2;
   agent.radius = this->robotRadius;
   agent.groupId = -1;
   // Initialize Goals 
@@ -968,17 +986,11 @@ void WorldHSFMPlugin::InitializeRobot() {
   this->entitiesIgnoreObs = this->agentIgnoreObs;
   this->entitiesIgnoreObs.push_back(this->robotIgnoreObs);
 
-  // for (unsigned int i = 0; i < this->sfmEntities.size(); ++i) {
-  //   std::cout<<"SFM Entity ID: "<<this->sfmEntities[i].id<<std::endl;
-  //   std::cout<<"Model Entity name: "<<this->entitiesModel[i]->GetName()<<std::endl;
-  // }
-
   // Get the robot laser
   this->laserSensor = sensors::SensorManager::Instance()->GetSensor(this->laserName);
   this->laserNode = boost::make_shared<gazebo::transport::Node>();
   this->laserNode->Init(this->world->Name());
   this->laserSub = this->laserNode->Subscribe(this->laserSensor->Topic(), &WorldHSFMPlugin::LaserCallback, this);
-  //std::cout<<"Laser sensor name: "<<this->laserSensor->Name()<<", Laser sensor type: "<<this->laserSensor->Type()<<", Laser topic: "<<this->laserSensor->Topic()<<std::endl;
 }
 
 ////////////////////////////////////////////////
@@ -1053,13 +1065,13 @@ void WorldHSFMPlugin::PublishForces() {
         // Group force
         msg.group_force.x = this->sfmActors[i].forces.groupForce.getX();
         msg.group_force.y = this->sfmActors[i].forces.groupForce.getY();
-        // // Torque force - not implemented
-        // msg.torque_force = 0.0;
+        // Torque force - not implemented
+        msg.torque_force = this->sfmActors[i].forces.torqueForce;
         // Linear velocity
         msg.linear_velocity.x = this->sfmActors[i].velocity.getX();
         msg.linear_velocity.y = this->sfmActors[i].velocity.getY();
-        // // Angular velocity - not implemented
-        // msg.angular_velocity = 0.0;
+        // Angular velocity - not implemented
+        msg.angular_velocity = this->sfmActors[i].angularVelocity;
         // Pose
         msg.pose.x = this->sfmActors[i].initPosition.getX();
         msg.pose.y = this->sfmActors[i].initPosition.getY();
@@ -1088,12 +1100,12 @@ void WorldHSFMPlugin::PublishForces() {
         msg.group_force.x = this->sfmEntities[i].forces.groupForce.getX();
         msg.group_force.y = this->sfmEntities[i].forces.groupForce.getY();
         // // Torque force - not implemented
-        // msg.torque_force = 0.0;
+        msg.torque_force = this->sfmEntities[i].forces.torqueForce;
         // Linear velocity
         msg.linear_velocity.x = this->sfmEntities[i].velocity.getX();
         msg.linear_velocity.y = this->sfmEntities[i].velocity.getY();
         // // Angular velocity - not implemented
-        // msg.angular_velocity = 0.0;
+        msg.angular_velocity = this->sfmEntities[i].angularVelocity;
         // Pose
         msg.pose.x = this->sfmEntities[i].initPosition.getX();
         msg.pose.y = this->sfmEntities[i].initPosition.getY();

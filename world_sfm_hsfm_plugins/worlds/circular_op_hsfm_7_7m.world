@@ -1,0 +1,140 @@
+<?xml version='1.0' encoding='utf-8'?>
+<sdf version="1.6">
+   <world name="world">
+       <plugin name="world_sfm" filename="libWorldHSFMPlugin.so">
+       </plugin>
+       <gui>
+           <camera name='gzclient_camera'>
+               <pose>-4.70385 10.895 16.2659 -0 0.921795 -1.12701</pose>
+           </camera>
+       </gui>
+       <gravity>0 0 -9.8</gravity>
+       <physics default="0" name="default_physics" type="ode">
+           <max_step_size>0.001</max_step_size>
+           <real_time_factor>1</real_time_factor>
+           <real_time_update_rate>1000</real_time_update_rate>
+       </physics>
+       <scene>
+           <ambient>0.6 0.6 0.6 1</ambient>
+           <background>0.4 0.4 0.4 1</background>
+           <shadows>false</shadows>
+       </scene>
+       <include>
+           <uri>model://sun</uri>
+       </include>
+       <include>
+           <uri>model://ground_plane</uri>
+           <pose>0 0 -0.1 0 -0 0</pose>
+       </include>
+       <model name="circular_workspace">
+           <allow_auto_disable>false</allow_auto_disable>
+           <static>true</static>
+           <pose>0 0 -0.1 0 0 0</pose>
+           <static>true</static>
+           <link name="CW_link">
+               <collision name="CW_collision">
+                   <pose>0 0 0 0 0 0</pose>
+                   <geometry>
+                       <mesh>
+                       <uri>model://circular_workspace_7m.dae</uri>
+                       <scale>1 1 1</scale>
+                       </mesh>
+                   </geometry>
+               </collision>
+               <visual name="CW_visual">
+                   <pose>0 0 0 0 0 0</pose>
+                   <geometry>
+                       <mesh>
+                           <uri>model://circular_workspace_7m.dae</uri>
+                           <scale>1 1 1</scale>
+                       </mesh>
+                   </geometry>
+               </visual>
+           </link>
+       </model>
+       <actor name="agent1">
+          <pose>0 0 1.01 0 0 0</pose>
+          <skin>
+              <filename>stand.dae</filename>
+              <scale>1.0</scale>
+          </skin>
+          <animation name="walking">
+              <filename>walk.dae</filename>
+              <scale>1.000000</scale>
+              <interpolate_x>true</interpolate_x>
+          </animation>
+       </actor>
+       <actor name="agent2">
+          <pose>0 1 1.01 0 0 0</pose>
+          <skin>
+              <filename>stand.dae</filename>
+              <scale>1.0</scale>
+          </skin>
+          <animation name="walking">
+              <filename>walk.dae</filename>
+              <scale>1.000000</scale>
+              <interpolate_x>true</interpolate_x>
+          </animation>
+       </actor>
+       <actor name="agent3">
+          <pose>0 2 1.01 0 0 0</pose>
+          <skin>
+              <filename>stand.dae</filename>
+              <scale>1.0</scale>
+          </skin>
+          <animation name="walking">
+              <filename>walk.dae</filename>
+              <scale>1.000000</scale>
+              <interpolate_x>true</interpolate_x>
+          </animation>
+       </actor>
+       <actor name="agent4">
+          <pose>0 3 1.01 0 0 0</pose>
+          <skin>
+              <filename>stand.dae</filename>
+              <scale>1.0</scale>
+          </skin>
+          <animation name="walking">
+              <filename>walk.dae</filename>
+              <scale>1.000000</scale>
+              <interpolate_x>true</interpolate_x>
+          </animation>
+       </actor>
+       <actor name="agent5">
+          <pose>0 4 1.01 0 0 0</pose>
+          <skin>
+              <filename>stand.dae</filename>
+              <scale>1.0</scale>
+          </skin>
+          <animation name="walking">
+              <filename>walk.dae</filename>
+              <scale>1.000000</scale>
+              <interpolate_x>true</interpolate_x>
+          </animation>
+       </actor>
+       <actor name="agent6">
+          <pose>0 5 1.01 0 0 0</pose>
+          <skin>
+              <filename>stand.dae</filename>
+              <scale>1.0</scale>
+          </skin>
+          <animation name="walking">
+              <filename>walk.dae</filename>
+              <scale>1.000000</scale>
+              <interpolate_x>true</interpolate_x>
+          </animation>
+       </actor>
+       <actor name="agent7">
+          <pose>0 6 1.01 0 0 0</pose>
+          <skin>
+              <filename>stand.dae</filename>
+              <scale>1.0</scale>
+          </skin>
+          <animation name="walking">
+              <filename>walk.dae</filename>
+              <scale>1.000000</scale>
+              <interpolate_x>true</interpolate_x>
+          </animation>
+       </actor>
+   </world>
+</sdf>
