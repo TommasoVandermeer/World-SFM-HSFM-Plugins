@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 
 """
-Generates parameters and world file for a circular open problem with the specified:
+Generates parameter, world, and launch files for a circular open problem with the specified:
 - Number of actors
-- SFM or HSFM
-- Radius of the circle (between 3, 5, 6 or 7 meters)
+- Human motion model: SFM or HSFM
+- Radius of the circle: 3, 5, 6 or 7 meters
 
 Author:
   - Tommaso Van Der Meer
@@ -12,7 +12,7 @@ Author:
 """
 import math
 import os 
-import sys
+from random import randint
 
 pkg_dir = os.path.join(os.path.expanduser('~'),'ros2_ws/src/World-SFM-HSFM-Plugins/world_sfm_hsfm_plugins/')
 config_dir = os.path.join(pkg_dir,'config/')
@@ -340,22 +340,46 @@ def main():
     radius = int(input("Specify the desired radius of the circular workspace (3, 4, 5, 6, or 7):\n"))
     n_actors = int(input("Specify the number of actors to insert in the experiment:\n"))
     model = bool(int(input("Specify the model that guides human motion (0: SFM, 1: HSFM):\n")))
+    rand = bool(int(input("Specify if you want the actors randomly positioned (0: False, 1: True):\n")))
 
     ### COMPUTATIONS
     if (not model): model_title = "sfm"
     else: model_title = "hsfm"
-    title = f"circular_op_{model_title}_{n_actors}_{radius}m"
-    arch = (2 * math.pi) / (n_actors + 1)
+    if (not rand): title = f"circular_op_{model_title}_{n_actors}_{radius}m"
+    else: title = f"circular_op_rand_{model_title}_{n_actors}_{radius}m"
     dist_center = radius - 0.5
 
     init_pos = []
     goal = []
     init_yaw = []
 
-    for i in range(n_actors + 1):
-        init_pos.append([round(dist_center * math.cos(arch * i),4), round(dist_center * math.sin(arch * i),4)])
-        init_yaw.append(round(to_degree(bound_angle(-math.pi + arch * i)),4))
-        goal.append([-init_pos[i][0],-init_pos[i][1]])
+    if (not rand):
+        arch = (2 * math.pi) / (n_actors + 1)
+
+        for i in range(n_actors + 1):
+            init_pos.append([round(dist_center * math.cos(arch * i),4), round(dist_center * math.sin(arch * i),4)])
+            init_yaw.append(round(to_degree(bound_angle(-math.pi + arch * i)),4))
+            goal.append([-init_pos[i][0],-init_pos[i][1]])
+    else:
+        arch = (2 * math.pi) * 0.6 / (2 * radius * math.pi)
+        rand_nums = []
+
+        for i in range(n_actors + 1):
+            if (i == 0):
+                init_pos.append([round(dist_center * math.cos(0.0),4), round(dist_center * math.sin(0.0),4)])
+                init_yaw.append(round(to_degree(bound_angle(-math.pi)),4))
+                goal.append([-init_pos[0][0],-init_pos[0][1]])
+            else:
+                check = False
+                num = 0
+                while (not check):
+                    num = randint(2,round(((2 * radius * math.pi) - 2)/ 0.6))
+                    if (num in rand_nums): continue
+                    else: check = True
+                rand_nums.append(num)
+                init_yaw.append(round(to_degree(bound_angle(-math.pi + arch * num)),4))
+                init_pos.append([round(dist_center * math.cos(arch * num),4), round(dist_center * math.sin(arch * num),4)])
+                goal.append([-init_pos[i][0],-init_pos[i][1]])
 
     ## GENERATE YAML
     write_yaml(radius, model, init_pos, init_yaw, goal, title)
@@ -367,7 +391,7 @@ def main():
     write_launch(title)
 
     print(f"Generation successfully completed! Build you ros2 workspace and launch with the following command: \n\n" +
-          "ros2 launch world_sfm_hsfm_plugins circular_op_{model_title}_{n_actors}_{radius}m.launch.py\n")
+          f"ros2 launch world_sfm_hsfm_plugins {title}.launch.py\n")
 
 if __name__ == "__main__":
     main()
