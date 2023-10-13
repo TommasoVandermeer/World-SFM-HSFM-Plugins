@@ -1,0 +1,139 @@
+<?xml version='1.0' encoding='utf-8'?>
+<sdf version="1.6">
+  <world name="world">
+    <plugin name="gazebo_ros_state" filename="libgazebo_ros_state.so">
+      <ros>
+        <namespace>/demo</namespace>
+        <remapping>model_states:=model_states_demo</remapping>
+        <remapping>link_states:=link_states_demo</remapping>
+      </ros>
+      <update_rate>1.0</update_rate>
+    </plugin>
+    <plugin name="world_sfm" filename="libWorldMHSFMPlugin.so">
+    </plugin>
+    <gui>
+      <camera name='gzclient_camera'>
+        <pose>-4.70385 10.895 16.2659 -0 0.921795 -1.12701</pose>
+      </camera>
+    </gui>
+    <gravity>0 0 -9.8</gravity>
+    <physics default="0" name="default_physics" type="ode">
+      <max_step_size>0.001</max_step_size> <!-- Default: 0.001 -->
+      <real_time_factor>1</real_time_factor>
+      <real_time_update_rate>1000</real_time_update_rate> <!-- Default: 1000 -->
+    </physics>
+    <scene>
+      <ambient>0.6 0.6 0.6 1</ambient>
+      <background>0.4 0.4 0.4 1</background>
+      <shadows>false</shadows>
+    </scene>
+    <include>
+      <uri>model://sun</uri>
+    </include>
+    <include>
+      <uri>model://ground_plane</uri>
+      <pose>0 0 -0.1 0 -0 0</pose>
+    </include>
+
+    <!-- MODELS /////////////////////////////////////////////////////////////////////////////////////////// -->
+    <model name="left_corridor_wall">
+      <allow_auto_disable>false</allow_auto_disable>
+      <static>true</static>
+      <pose>1 0 1.2 0 0 0</pose>
+      <static>true</static>
+      <link name="left_corridor_wall_link">
+        <collision name="left_corridor_wall_collision">
+          <pose>0 0 0 0 0 0</pose>
+          <geometry>
+            <box>
+              <size>0.2 5 2.4</size>
+            </box>
+          </geometry>
+        </collision>
+        <visual name="left_corridor_wall_visual">
+          <pose>0 0 0 0 0 0</pose>
+          <geometry>
+            <box>
+              <size>0.2 5 2.4</size>
+            </box>
+          </geometry>
+        </visual>
+      </link>
+    </model>
+    <model name="right_corridor_wall">
+      <allow_auto_disable>false</allow_auto_disable>
+      <static>true</static>
+      <pose>-1 0 1.2 0 0 0</pose>
+      <static>true</static>
+      <link name="right_corridor_wall_link">
+        <collision name="right_corridor_wall_collision">
+          <pose>0 0 0 0 0 0</pose>
+          <geometry>
+            <box>
+              <size>0.2 5 2.4</size>
+            </box>
+          </geometry>
+        </collision>
+        <visual name="right_corridor_wall_visual">
+          <pose>0 0 0 0 0 0</pose>
+          <geometry>
+            <box>
+              <size>0.2 5 2.4</size>
+            </box>
+          </geometry>
+        </visual>
+      </link>
+    </model>
+    <model name="obstacle">
+      <allow_auto_disable>false</allow_auto_disable>
+      <static>true</static>
+      <pose>0.5 0.5 0.5 0 0 0</pose>
+      <static>true</static>
+      <link name="obstacle_link">
+        <collision name="obstacle_collision">
+          <pose>0 0 0 0 0 0</pose>
+          <geometry>
+            <box>
+              <size>1 1 1</size>
+            </box>
+          </geometry>
+        </collision>
+        <visual name="obstacle_visual">
+          <pose>0 0 0 0 0 0</pose>
+          <geometry>
+            <box>
+              <size>1 1 1</size>
+            </box>
+          </geometry>
+        </visual>
+      </link>
+    </model>
+
+    <!-- ACTORS /////////////////////////////////////////////////////////////////////////////////////////// -->
+    <actor name="agent1">
+      <pose>-0.2 5 1.01 0 0 0</pose>
+      <skin>
+        <filename>stand.dae</filename>
+        <scale>1.0</scale>
+      </skin>
+      <animation name="walking">
+        <filename>walk.dae</filename>
+        <scale>1.000000</scale>
+        <interpolate_x>true</interpolate_x>
+      </animation>
+    </actor>
+
+    <actor name="agent2">
+      <pose>-0.2 -5 1.01 0 0 0</pose>
+      <skin>
+        <filename>stand.dae</filename>
+        <scale>1.0</scale>
+      </skin>
+      <animation name="walking">
+        <filename>walk.dae</filename>
+        <scale>1.000000</scale>
+        <interpolate_x>true</interpolate_x>
+      </animation>
+    </actor>
+  </world>
+</sdf>

@@ -1,6 +1,6 @@
 /***********************************************************************/
 /**                                                                    */
-/** WorldHSFMPlugin.cpp                                                 */
+/** WorldMHSFMPlugin.cpp                                               */
 /**                                                                    */
 /** Author: Tommaso Van Der Meer (tommaso.vander@unisi.it)             */
 /**                                                                    */
@@ -10,18 +10,18 @@
 #include <stdio.h>
 #include <string>
 
-#include <world_sfm_hsfm_plugins/WorldHSFMPlugin.h>
+#include <world_sfm_hsfm_plugins/WorldMHSFMPlugin.h>
 
 using namespace gazebo;
-GZ_REGISTER_WORLD_PLUGIN(WorldHSFMPlugin)
+GZ_REGISTER_WORLD_PLUGIN(WorldMHSFMPlugin)
 
 #define WALKING_ANIMATION "walking"
 
 /////////////////////////////////////////////////
-WorldHSFMPlugin::WorldHSFMPlugin() {}
+WorldMHSFMPlugin::WorldMHSFMPlugin() {}
 
 /////////////////////////////////////////////////
-void WorldHSFMPlugin::Load(gazebo::physics::WorldPtr _world, sdf::ElementPtr _sdf) {
+void WorldMHSFMPlugin::Load(gazebo::physics::WorldPtr _world, sdf::ElementPtr _sdf) {
   this->sdf = _sdf;
   this->world = _world;
   
@@ -39,14 +39,14 @@ void WorldHSFMPlugin::Load(gazebo::physics::WorldPtr _world, sdf::ElementPtr _sd
   this->actorForcesNode = std::make_shared<rclcpp::Node>("publish_Forces_Node");
 
   this->connections.push_back(event::Events::ConnectWorldUpdateBegin(
-    std::bind(&WorldHSFMPlugin::Loading, this, std::placeholders::_1)));
+    std::bind(&WorldMHSFMPlugin::Loading, this, std::placeholders::_1)));
 
   // Reset settings (goals and animations)
   this->Reset();
 }
 
 /////////////////////////////////////////////////
-void WorldHSFMPlugin::Loading(const common::UpdateInfo &_info) {
+void WorldMHSFMPlugin::Loading(const common::UpdateInfo &_info) {
 
   /// Both collision models to actors and robot control
   if ((this->attachCollisionToActors) && (this->controlRobot)) {
@@ -77,7 +77,7 @@ void WorldHSFMPlugin::Loading(const common::UpdateInfo &_info) {
       }
       this->connections.pop_back();
       this->connections.push_back(event::Events::ConnectWorldUpdateBegin(
-        std::bind(&WorldHSFMPlugin::OnUpdate, this, std::placeholders::_1)));
+        std::bind(&WorldMHSFMPlugin::OnUpdate, this, std::placeholders::_1)));
     }
   }
 
@@ -93,7 +93,7 @@ void WorldHSFMPlugin::Loading(const common::UpdateInfo &_info) {
     } else {
       this->connections.pop_back();
       this->connections.push_back(event::Events::ConnectWorldUpdateBegin(
-        std::bind(&WorldHSFMPlugin::OnUpdate, this, std::placeholders::_1)));
+        std::bind(&WorldMHSFMPlugin::OnUpdate, this, std::placeholders::_1)));
     }
   }
 
@@ -119,7 +119,7 @@ void WorldHSFMPlugin::Loading(const common::UpdateInfo &_info) {
       }
       this->connections.pop_back();
       this->connections.push_back(event::Events::ConnectWorldUpdateBegin(
-        std::bind(&WorldHSFMPlugin::OnUpdateOnlyActors, this, std::placeholders::_1)));
+        std::bind(&WorldMHSFMPlugin::OnUpdateOnlyActors, this, std::placeholders::_1)));
     }
   }
   
@@ -127,12 +127,12 @@ void WorldHSFMPlugin::Loading(const common::UpdateInfo &_info) {
   if ((!this->attachCollisionToActors) && (!this->controlRobot)) {
     this->connections.pop_back();
     this->connections.push_back(event::Events::ConnectWorldUpdateBegin(
-      std::bind(&WorldHSFMPlugin::OnUpdateOnlyActors, this, std::placeholders::_1)));
+      std::bind(&WorldMHSFMPlugin::OnUpdateOnlyActors, this, std::placeholders::_1)));
   }
 }
 
 /////////////////////////////////////////////////
-void WorldHSFMPlugin::Reset() {
+void WorldMHSFMPlugin::Reset() {
   this->lastUpdate = 0;
 
   for (unsigned int i = 0; i < this->actors.size(); ++i) {
@@ -159,7 +159,7 @@ void WorldHSFMPlugin::Reset() {
 }
 
 /////////////////////////////////////////////////
-void WorldHSFMPlugin::HandleObstacles() {
+void WorldMHSFMPlugin::HandleObstacles() {
   for (unsigned int k = 0; k < this->sfmEntities.size(); ++k) {
     if (this->entitiesModel[k]->GetId() == this->robotModel->GetId()) {
       // If the robot is considered take the obs found by laser
@@ -229,7 +229,7 @@ void WorldHSFMPlugin::HandleObstacles() {
 }
 
 /////////////////////////////////////////////////
-void WorldHSFMPlugin::HandleObstaclesOnlyActors() {
+void WorldMHSFMPlugin::HandleObstaclesOnlyActors() {
   for (unsigned int k = 0; k < this->sfmActors.size(); ++k) {
     double minDist;
     ignition::math::Vector2d closest_obs;
@@ -279,7 +279,7 @@ void WorldHSFMPlugin::HandleObstaclesOnlyActors() {
 }
 
 /////////////////////////////////////////////////
-void WorldHSFMPlugin::OnUpdate(const common::UpdateInfo &_info) {
+void WorldMHSFMPlugin::OnUpdate(const common::UpdateInfo &_info) {
   double dt = (_info.simTime - this->lastUpdate).Double();
   // If sampling time is passed from last update
   if (dt >= this->samplingTime){
@@ -353,7 +353,7 @@ void WorldHSFMPlugin::OnUpdate(const common::UpdateInfo &_info) {
 }
 
 /////////////////////////////////////////////////
-void WorldHSFMPlugin::OnUpdateOnlyActors(const common::UpdateInfo &_info) {
+void WorldMHSFMPlugin::OnUpdateOnlyActors(const common::UpdateInfo &_info) {
   double dt = (_info.simTime - this->lastUpdate).Double();
   // If sampling time is passed from last update
   if (dt >= this->samplingTime){
@@ -397,7 +397,7 @@ void WorldHSFMPlugin::OnUpdateOnlyActors(const common::UpdateInfo &_info) {
 }
 
 ////////////////////////////////////////////////
-void WorldHSFMPlugin::LoadAgentsFromYaml() {
+void WorldMHSFMPlugin::LoadAgentsFromYaml() {
   // FIRST REQUEST to get the agents names and other global parameters
   auto request = std::make_shared<rcl_interfaces::srv::GetParameters::Request>();
   request->names = {"agents","sampling_time","runge_kutta_45","robot_name","robot_initial_orientation", \
@@ -405,7 +405,7 @@ void WorldHSFMPlugin::LoadAgentsFromYaml() {
   "robot_k_orthogonal", "robot_k_damping", "robot_velocity", "robot_ignore_obstacles", \
   "laser_sensor_name", "attach_cylinder_to_humans","ground_height","robot_control","consider_robot", \
   "robot_k_lambda", "robot_alpha", "robot_Ai", "robot_Aw", "robot_Bi", "robot_Bw", "robot_k1", \
-  "robot_k2"};
+  "robot_k2", "robot_Ci", "robot_Cw", "robot_Di", "robot_Dw"};
   this->actorParamsClient->wait_for_service();
   auto future = this->actorParamsClient->async_send_request(request);
 
@@ -563,6 +563,34 @@ void WorldHSFMPlugin::LoadAgentsFromYaml() {
       } else {
         this->robotK2 = results[26].double_value;
       }
+      // Robot Ci
+      if (results[27].type == rclcpp::PARAMETER_NOT_SET) {
+        this->robotCi = 1000.0;
+        std::cout<<"Ci for robot not set, setting it to the default value: "<<this->robotCi<<std::endl;
+      } else {
+        this->robotCi = results[27].double_value;
+      }
+      // Robot Cw
+      if (results[28].type == rclcpp::PARAMETER_NOT_SET) {
+        this->robotCw = 1000.0;
+        std::cout<<"Cw for robot not set, setting it to the default value: "<<this->robotCw<<std::endl;
+      } else {
+        this->robotCw = results[28].double_value;
+      }
+      // Robot Di
+      if (results[29].type == rclcpp::PARAMETER_NOT_SET) {
+        this->robotDi = 0.2;
+        std::cout<<"Di for robot not set, setting it to the default value: "<<this->robotDi<<std::endl;
+      } else {
+        this->robotDi = results[29].double_value;
+      }
+      // Robot Dw
+      if (results[30].type == rclcpp::PARAMETER_NOT_SET) {
+        this->robotDw = 0.2;
+        std::cout<<"Dw for robot not set, setting it to the default value: "<<this->robotDw<<std::endl;
+      } else {
+        this->robotDw = results[30].double_value;
+      }
       // Robot ingore obstacles
       for (unsigned int j = 0; j < this->agentNames.size(); ++j){
         this->robotIgnoreObs.push_back(this->agentNames[j]); // All the actor's models must be ignored
@@ -620,7 +648,8 @@ void WorldHSFMPlugin::LoadAgentsFromYaml() {
     this->agentNames[i] + ".ignore_obstacles", this->agentNames[i] + ".waypoints", this->agentNames[i] + ".publish_forces", \
     this->agentNames[i] + ".group", this->agentNames[i] + ".initial_orientation", this->agentNames[i] + ".initial_position", \
     this->agentNames[i] + ".k1g", this->agentNames[i] + ".k2g", this->agentNames[i] + ".Ai", this->agentNames[i] + ".Aw", \
-    this->agentNames[i] + ".Bi", this->agentNames[i] + ".Bw", this->agentNames[i] + ".k1", this->agentNames[i] + ".k2"};
+    this->agentNames[i] + ".Bi", this->agentNames[i] + ".Bw", this->agentNames[i] + ".k1", this->agentNames[i] + ".k2", \
+    this->agentNames[i] + ".Ci", this->agentNames[i] + ".Cw", this->agentNames[i] + ".Di", this->agentNames[i] + ".Dw"};
 
     auto future = this->actorParamsClient->async_send_request(request);
 
@@ -813,6 +842,34 @@ void WorldHSFMPlugin::LoadAgentsFromYaml() {
       } else {
         this->agentK2.push_back(results[25].double_value);
       }
+      // Ci
+      if (results[26].type == rclcpp::PARAMETER_NOT_SET) {
+        this->agentCi.push_back(1000.0);
+        std::cout<<"Ci for " + this->agentNames[i] + " not set, setting it to the default value: 1000.0"<<std::endl;
+      } else {
+        this->agentCi.push_back(results[26].double_value);
+      }
+      // Cw
+      if (results[27].type == rclcpp::PARAMETER_NOT_SET) {
+        this->agentCw.push_back(1000.0);
+        std::cout<<"Cw for " + this->agentNames[i] + " not set, setting it to the default value: 1000.0"<<std::endl;
+      } else {
+        this->agentCw.push_back(results[27].double_value);
+      }
+      // Di
+      if (results[28].type == rclcpp::PARAMETER_NOT_SET) {
+        this->agentDi.push_back(0.2);
+        std::cout<<"Di for " + this->agentNames[i] + " not set, setting it to the default value: 0.2"<<std::endl;
+      } else {
+        this->agentDi.push_back(results[28].double_value);
+      }
+      // Dw
+      if (results[29].type == rclcpp::PARAMETER_NOT_SET) {
+        this->agentDw.push_back(0.2);
+        std::cout<<"Dw for " + this->agentNames[i] + " not set, setting it to the default value: 0.2"<<std::endl;
+      } else {
+        this->agentDw.push_back(results[29].double_value);
+      }
       // Agents in group
       if (results[12].type == rclcpp::PARAMETER_NOT_SET) {
         std::cout<<"No group for " + this->agentNames[i]<<std::endl;
@@ -833,7 +890,7 @@ void WorldHSFMPlugin::LoadAgentsFromYaml() {
 }
 
 ////////////////////////////////////////////////
-void WorldHSFMPlugin::InitializeActors() {
+void WorldMHSFMPlugin::InitializeActors() {
   for (unsigned int i = 0; i < this->actors.size(); ++i) {
     ignition::math::Pose3d actorPose = this->actors[i]->WorldPose();
 
@@ -870,6 +927,10 @@ void WorldHSFMPlugin::InitializeActors() {
     agent.params.Aw = this->agentAw[i];
     agent.params.Bi = this->agentBi[i];
     agent.params.Bw = this->agentBw[i];
+    agent.params.Ci = this->agentCi[i];
+    agent.params.Cw = this->agentCw[i];
+    agent.params.Di = this->agentDi[i];
+    agent.params.Dw = this->agentDw[i];
     agent.params.k1 = this->agentK1[i];
     agent.params.k2 = this->agentK2[i];
     agent.radius = this->agentRadius[i];
@@ -892,7 +953,7 @@ void WorldHSFMPlugin::InitializeActors() {
 }
 
 ////////////////////////////////////////////////
-void WorldHSFMPlugin::CreateModelForActors() {
+void WorldMHSFMPlugin::CreateModelForActors() {
   for (unsigned int i = 0; i < this->agentModel.size(); ++i) {
 
     std::string modelName = this->agentNames[i] + "_collision_cylinder";
@@ -923,7 +984,7 @@ void WorldHSFMPlugin::CreateModelForActors() {
 }
 
 ////////////////////////////////////////////////
-void WorldHSFMPlugin::InitializeRobot() {
+void WorldMHSFMPlugin::InitializeRobot() {
   this->robotModel = this->world->ModelByName(this->robotName);
   this->robotModel->SetWorld(this->world);
 
@@ -962,6 +1023,10 @@ void WorldHSFMPlugin::InitializeRobot() {
   agent.params.Aw = this->robotAw;
   agent.params.Bi = this->robotBi;
   agent.params.Bw = this->robotBw;
+  agent.params.Ci = this->robotCi;
+  agent.params.Cw = this->robotCw;
+  agent.params.Di = this->robotDi;
+  agent.params.Dw = this->robotDw;
   agent.params.k1 = this->robotK1;
   agent.params.k2 = this->robotK2;
   agent.radius = this->robotRadius;
@@ -990,11 +1055,11 @@ void WorldHSFMPlugin::InitializeRobot() {
   this->laserSensor = sensors::SensorManager::Instance()->GetSensor(this->laserName);
   this->laserNode = boost::make_shared<gazebo::transport::Node>();
   this->laserNode->Init(this->world->Name());
-  this->laserSub = this->laserNode->Subscribe(this->laserSensor->Topic(), &WorldHSFMPlugin::LaserCallback, this);
+  this->laserSub = this->laserNode->Subscribe(this->laserSensor->Topic(), &WorldMHSFMPlugin::LaserCallback, this);
 }
 
 ////////////////////////////////////////////////
-void WorldHSFMPlugin::LaserCallback(ConstLaserScanStampedPtr &msg) {
+void WorldMHSFMPlugin::LaserCallback(ConstLaserScanStampedPtr &msg) {
   // Erase previous scans
   this->laserRanges.clear();
   this->laserObs.clear();
@@ -1045,7 +1110,7 @@ void WorldHSFMPlugin::LaserCallback(ConstLaserScanStampedPtr &msg) {
 }
 
 ////////////////////////////////////////////////
-void WorldHSFMPlugin::PublishForces() {
+void WorldMHSFMPlugin::PublishForces() {
   if (!this->controlRobot) {
     for (unsigned int i = 0; i < this->actors.size(); ++i) {
       if (this->agentPubForces[i] == true) {
